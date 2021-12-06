@@ -1,0 +1,18 @@
+version: '1'
+services:
+  database:
+    image: mongo:latest
+    container_name: database
+    ports:
+      - "27017:27017"
+    restart: always
+
+  # service_vehicles:
+  #   build: ./pasta_do_servico
+  #   ports:
+  #     - "5000:5000"
+  #   environment:
+  #     - PORT=5000
+  #     - DBHOST=mongodb://database:3017
+  #     - DBNAME=vehicles_db
+  #   restart: "no"
