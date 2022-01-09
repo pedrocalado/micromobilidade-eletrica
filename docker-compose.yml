@@ -1,10 +1,16 @@
-version: '1'
+version: "1"
 services:
-  database:
-    image: mongo:latest
-    container_name: database
+  # database:
+  #   image: mongo:latest
+  #   container_name: database
+  #   ports:
+  #     - "27017:27017"
+  #   restart: always
+
+  service_gender_age:
+    build: ./service_gender_age
     ports:
-      - "27017:27017"
+      - 5002:9000
     restart: always
 
   # service_vehicles:
