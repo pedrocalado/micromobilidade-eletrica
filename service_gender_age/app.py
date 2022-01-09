@@ -129,11 +129,11 @@ def predict():
     """
     # check if the post request has the file part
     if 'image' not in request.files:
-        return jsonify({'error':'No posted image. Should be attribute named image.'})
+        return jsonify({'error':'No posted image. Should be attribute named image.'}), 400
     file = request.files['image']
 
     if file.filename == '':
-        return jsonify({'error':'Empty filename submitted.'})
+        return jsonify({'error':'Empty filename submitted.'}), 400
     if file and allowed_file(file.filename):
         filename = file.filename
 
@@ -159,7 +159,7 @@ def predict():
         
         return result
     else:
-        return jsonify({'error':'File has invalid extension'})
+        return jsonify({'error':'File has invalid extension'}), 400
 
 
 # Servir a API
