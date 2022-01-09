@@ -2,7 +2,11 @@ const Joi = require('joi');
 const pick = require('../utils/pick');
 
 const validate = (schema) => (req, res, next) => {
-    const result = schema.validate(req.body);
+    const validSchema = pick(schema, ['params', 'query', 'body']);
+    const object = pick(req, Object.keys(validSchema));
+    const result = Joi.compile(validSchema)
+        .prefs({ errors: { label: 'key' } })
+        .validate(object);
     const { error } = result;
     const valid = error == null;
 
