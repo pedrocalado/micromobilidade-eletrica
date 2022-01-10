@@ -4,8 +4,6 @@ const Joi = require('joi');
 
 dotenv.config({ path: path.join(__dirname, '../../.env') });
 
-console.log("Teste")
-
 const envVarsSchema = Joi.object()
     .keys({
         NODE_ENV: Joi.string().valid('production', 'development', 'test').required(),
@@ -40,6 +38,9 @@ module.exports = {
             useUnifiedTopology: true,
         },
     },
+    gender_age: {
+        url: 'http://localhost:5002/api/predict'
+    }
     // jwt: {
     //     secret: envVars.JWT_SECRET,
     //     accessExpirationMinutes: envVars.JWT_ACCESS_EXPIRATION_MINUTES,

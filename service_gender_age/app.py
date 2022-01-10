@@ -73,9 +73,9 @@ def process_and_predict(file):
     age = agemodel.predict(img_tensor)
     gender = np.round(genmodel.predict(img_tensor))
     if gender == 0:
-        gender = 'Masculino'
+        gender = 'male'
     elif gender == 1:
-        gender = 'Feminino'
+        gender = 'female'
         
     print('Idade:', int(age), '\n Genero:', gender)
     return jsonify({'age': int(age), 'gender': gender})

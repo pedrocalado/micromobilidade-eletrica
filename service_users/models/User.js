@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const uniqueValidator = require('mongoose-unique-validator');
 const validator = require('validator');
 const { roles } = require('../config/roles');
 
@@ -44,6 +45,7 @@ const userSchema = mongoose.Schema({
 }, {
     timestamps: true,
 });
+userSchema.plugin(uniqueValidator);
 
 /**
  * @typedef User
