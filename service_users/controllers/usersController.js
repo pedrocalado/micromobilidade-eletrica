@@ -7,7 +7,15 @@ const path = require('path');
 const calculateAge = require('../utils/calculateAge');
 
 const listUsers = async (req, res) => {
-    res.send("Lista de utilizadores")
+    const users = await User.find({}, {
+        _id: true,
+        name: true,
+        email: true,
+        birthDate: true,
+        balance: true,
+    });
+
+    res.send(users);
 }
 
 const createUser = async (req, res) => {
@@ -71,12 +79,7 @@ const createUser = async (req, res) => {
     }
 }
 
-const updateUser = async (req, res) => {
-    res.send("Criar utilizador")
-}
-
 module.exports = {
     listUsers,
-    createUser,
-    updateUser,
+    createUser
 }
