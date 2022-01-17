@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: replicaset_service_user
+spec:
+  replicas: 13
+  selector: 
+    matchLabels: 
+      app: service_user
+  template:
+    metadata:
+      labels:
+          app: service_user
+    spec:
+      containers:
+      - name: service_user
+        image: mgcarvalho/IPCA_services_users:latest
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+          - containerPort: 80

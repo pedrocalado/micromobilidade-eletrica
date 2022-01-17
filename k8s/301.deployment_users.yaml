@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mobilidade_eletrica
+spec:
+  replicas: 3
+  selector: 
+    matchLabels: 
+      app: pod_users
+  template:
+    metadata:
+      labels:
+          app: pod_users
+    spec:
+      containers:
+      - name: pod_users
+        image: mgcarvalho/IPCA_services_users:latest
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+          - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: deployment_mobilidade_eletrica
+spec:
+  selector:
+    app: deployment_mobilidade_eletrica
+  ports:
+  - port: 80
+    name: http
+    nodePort: 31123
+    #targetPort: <Target Port>
+  type: NodePort
