@@ -1,6 +1,6 @@
 const Joi = require('joi').extend(require('@joi/date'));
 
-const createUser = {
+const create = {
     body: Joi.object().keys({
         name: Joi.string().required(),
         email: Joi.string().required().email(),
@@ -11,5 +11,5 @@ const createUser = {
 };
 
 module.exports = {
-    createUser
+    create
 };
