@@ -1,0 +1,1 @@
+module.exports.vehicleTypesValidator = require('./vehicle-types');
