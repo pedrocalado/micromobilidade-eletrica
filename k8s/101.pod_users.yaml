@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: service_user
+  labels:
+    name: service_user
+spec:
+  containers:
+  - name: service_user
+    image: mgcarvalho/IPCA_services_users:latest
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    ports:
+      - containerPort: 80
