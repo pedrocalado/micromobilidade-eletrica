@@ -10,7 +10,7 @@ const envVarsSchema = Joi.object()
         PORT: Joi.number().default(3000),
         MONGODB_URL: Joi.string().required().description('Mongo DB url'),
         JWT_SECRET: Joi.string().required().description('JWT secret key'),
-        JWT_ACCESS_EXPIRATION_MINUTES: Joi.number().default(30).description('minutes after which access tokens expire'),
+        JWT_ACCESS_EXPIRATION_SECONDS: Joi.number().default(3600).description('seconds after which access tokens expire'),
         JWT_REFRESH_EXPIRATION_DAYS: Joi.number().default(30).description('days after which refresh tokens expire'),
         JWT_RESET_PASSWORD_EXPIRATION_MINUTES: Joi.number()
             .default(10)
@@ -40,12 +40,9 @@ module.exports = {
     },
     gender_age: {
         url: 'http://localhost:5002/api/predict'
-    }
-    // jwt: {
-    //     secret: envVars.JWT_SECRET,
-    //     accessExpirationMinutes: envVars.JWT_ACCESS_EXPIRATION_MINUTES,
-    //     refreshExpirationDays: envVars.JWT_REFRESH_EXPIRATION_DAYS,
-    //     resetPasswordExpirationMinutes: envVars.JWT_RESET_PASSWORD_EXPIRATION_MINUTES,
-    //     verifyEmailExpirationMinutes: envVars.JWT_VERIFY_EMAIL_EXPIRATION_MINUTES,
-    // },
+    },
+    jwt: {
+        secret: envVars.JWT_SECRET,
+        expiresIn: envVars.JWT_ACCESS_EXPIRATION_SECONDS,
+    },
 };

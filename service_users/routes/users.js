@@ -2,6 +2,7 @@ const express = require('express');
 const usersController = require('../controllers/users');
 const validate = require('../middlewares/validate');
 const usersValidation = require('../validators/users');
+const auth = require('../middlewares/auth');
 const multer = require('multer');
 var db = require('mime-db')
 
@@ -22,8 +23,10 @@ const upload = multer({ storage: storage });
 const router = express.Router();
 
 router.route('/')
-    .get(usersController.list)
+    .get(auth, usersController.list)
     // Register endpoint with form-data to handle file upload
-    .post(upload.single('picture'), validate(usersValidation.create), usersController.create)
+    .post(upload.single('picture'), validate(usersValidation.create), usersController.create);
+
+router.post('/login', usersController.login);
 
 module.exports = router;

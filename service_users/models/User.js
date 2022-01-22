@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 const validator = require('validator');
+const bcrypt = require('bcryptjs');
 const { roles } = require('../config/roles');
 
 const userSchema = mongoose.Schema({
@@ -47,9 +48,20 @@ const userSchema = mongoose.Schema({
 });
 userSchema.plugin(uniqueValidator);
 
-/**
- * @typedef User
- */
+
+userSchema.methods.isPasswordMatch = async function (password) {
+    const user = this;
+    return bcrypt.compare(password, user.password);
+};
+
+userSchema.pre('save', async function (next) {
+    const user = this;
+    if (user.isModified('password')) {
+        user.password = await bcrypt.hash(user.password, 8);
+    }
+    next();
+});
+
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
