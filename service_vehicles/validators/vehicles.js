@@ -6,7 +6,9 @@ const create = {
         registration: Joi.string().required(),
         year: Joi.number().required(),
         month: Joi.number().integer().min(1).max(12).required(),
-        vehicle_type_id: Joi.objectId()
+        vehicle_type_id: Joi.objectId(),
+        max_capacity: Joi.number().required().min(0),
+        current_capacity: Joi.number().required().min(0)
     })
 };
 

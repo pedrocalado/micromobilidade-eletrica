@@ -30,6 +30,7 @@ module.exports = {
         },
     },
     usersService: {
-        authUrl: `http://localhost:${envVars.SERVICE_USERS_PORT}/users/check-auth`
+        authUrl: `http://localhost:${envVars.SERVICE_USERS_PORT}/users/check-auth`,
+        adminUrl: `http://localhost:${envVars.SERVICE_USERS_PORT}/users/check-admin`,
     }
 };

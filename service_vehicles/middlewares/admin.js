@@ -1,22 +1,22 @@
 const config = require('../config/config');
 const axios = require('axios');
 
-const auth = async (req, res, next) => {
+const admin = async (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
 
     if (token == null) return res.sendStatus(403);
 
-    // Check it the token is valid in the users service
+    // Check it the user is admin
     try {
-        const usersServiceUrl = config.usersService.authUrl;
-        const isAuth = await axios.post(usersServiceUrl, {}, {
+        const usersServiceUrl = config.usersService.adminUrl;
+        const isAdmin = await axios.post(usersServiceUrl, {}, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         })
 
-        if (isAuth.data.is_authenticated) {
+        if (isAdmin.data.is_admin) {
             next();
         } else {
             return res.sendStatus(403);
@@ -26,4 +26,4 @@ const auth = async (req, res, next) => {
     }
 }
 
-module.exports = auth;
+module.exports = admin;
