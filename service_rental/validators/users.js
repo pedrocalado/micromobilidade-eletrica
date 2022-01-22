@@ -1,7 +1,7 @@
 const Joi = require('joi');
 
 const schemas = {
-    createUser: Joi.object().keys({
+    create: Joi.object().keys({
         name: Joi.string().required(),
         email: Joi.string().required().email(),
         password: Joi.string().required().length(6),
