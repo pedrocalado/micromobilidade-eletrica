@@ -20,7 +20,7 @@ if (error) {
 
 module.exports = {
     env: envVars.NODE_ENV,
-    port: envVars.SERVICE_USERS_PORT,
+    port: envVars.SERVICE_VEHICLES_PORT,
     mongoose: {
         url: envVars.MONGODB_URL + (envVars.NODE_ENV === 'test' ? '-test' : ''),
         options: {
@@ -28,5 +28,8 @@ module.exports = {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         },
+    },
+    usersService: {
+        authUrl: `http://localhost:${envVars.SERVICE_USERS_PORT}/users/check-auth`
     }
 };
