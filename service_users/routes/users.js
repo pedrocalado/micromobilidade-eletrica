@@ -29,4 +29,6 @@ router.route('/')
 
 router.post('/login', usersController.login);
 
+router.post('/check-auth', usersController.checkAuth)
+
 module.exports = router;

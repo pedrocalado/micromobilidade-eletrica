@@ -35,7 +35,7 @@ const create = async (req, res) => {
         }
 
         // Age and gender
-        const genderAgeUrl = config.gender_age.url;
+        const genderAgeUrl = config.genderAge.url;
 
         const imagePath = path.join(__dirname + '/..', file.path);
         const image = fs.createReadStream(imagePath);
@@ -96,8 +96,33 @@ const login = async (req, res) => {
     });
 }
 
+const checkAuth = (req, res) => {
+    const token = req.body.token;
+
+    if (token == null) return res.sendStatus(401);
+
+    jwt.verify(token, config.jwt.secret, (err, user) => {
+        console.log(user)
+        if (err) {
+            return res.json({
+                is_authenticated: false
+            });
+        }
+
+        const nowSeconts = Math.floor(Date.now() / 1000);
+
+        const expiresIn = user.exp - nowSeconts;
+
+        res.json({
+            is_authenticated: true,
+            expires_in: expiresIn
+        })
+    })
+}
+
 module.exports = {
     list,
     create,
-    login
+    login,
+    checkAuth
 }

@@ -38,7 +38,7 @@ module.exports = {
             useUnifiedTopology: true,
         },
     },
-    gender_age: {
+    genderAge: {
         url: 'http://localhost:5002/api/predict'
     },
     jwt: {
