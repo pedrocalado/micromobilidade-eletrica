@@ -25,10 +25,12 @@ const router = express.Router();
 router.route('/')
     .get(auth, usersController.list)
     // Register endpoint with form-data to handle file upload
-    .post(upload.single('picture'), validate(usersValidation.create), usersController.create);
+    .post(validate(usersValidation.create), usersController.create);
 
+router.post('/register', upload.single('picture'), validate(usersValidation.register), usersController.register)
 router.post('/login', usersController.login);
 
 router.post('/check-auth', usersController.checkAuth)
+router.post('/check-admin', usersController.checkAdmin)
 
 module.exports = router;

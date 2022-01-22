@@ -19,8 +19,8 @@ const list = async (req, res) => {
     res.send(users);
 }
 
-const create = async (req, res) => {
-    const { name, email, password, birth_date, gender, role } = req.body;
+const register = async (req, res) => {
+    const { name, email, password, birth_date, gender } = req.body;
     const file = req.file;
 
     try {
@@ -68,6 +68,34 @@ const create = async (req, res) => {
             password,
             birthDate: birth_date,
             gender,
+            role: 'user'
+        })
+        res.status(201).send(user)
+    } catch (error) {
+        res.status(400).send(error)
+    }
+}
+
+const create = async (req, res) => {
+    const { name, email, password, birth_date, gender, role } = req.body;
+
+    try {
+        const date = new Date();
+        const today = date.getDate() + '/' + (date.getMonth() + 1) + '/' + date.getFullYear();
+        const userAge = calculateAge(birth_date, today);
+
+        if (userAge < 16) {
+            res.status(400).send({
+                error: "O registo apenas é válido para utilizadores com idade igual ou superior a 16 anos."
+            });
+        }
+
+        const user = await User.create({
+            name,
+            email,
+            password,
+            birthDate: birth_date,
+            gender,
             role
         })
         res.status(201).send(user)
@@ -97,21 +125,23 @@ const login = async (req, res) => {
 }
 
 const checkAuth = (req, res) => {
-    const token = req.body.token;
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    // const token = req.body.token;
 
     if (token == null) return res.sendStatus(401);
 
     jwt.verify(token, config.jwt.secret, (err, user) => {
-        console.log(user)
         if (err) {
             return res.json({
                 is_authenticated: false
             });
         }
 
-        const nowSeconts = Math.floor(Date.now() / 1000);
+        const nowSeconds = Math.floor(Date.now() / 1000);
 
-        const expiresIn = user.exp - nowSeconts;
+        const expiresIn = user.exp - nowSeconds;
 
         res.json({
             is_authenticated: true,
@@ -120,9 +150,30 @@ const checkAuth = (req, res) => {
     })
 }
 
+const checkAdmin = (req, res) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (token == null) return res.sendStatus(401);
+
+    jwt.verify(token, config.jwt.secret, async (err, user) => {
+        if (err) {
+            return res.status(403).send()
+        }
+
+        const dbUser = await User.findOne({ email: user.email })
+
+        res.json({
+            is_admin: dbUser ? dbUser.role == 'admin' : false
+        })
+    })
+}
+
 module.exports = {
     list,
     create,
+    register,
     login,
-    checkAuth
+    checkAuth,
+    checkAdmin
 }
