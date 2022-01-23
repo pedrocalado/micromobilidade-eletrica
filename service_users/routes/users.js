@@ -29,6 +29,7 @@ router.route('/')
 
 router.post('/register', upload.single('picture'), validate(usersValidation.register), usersController.register)
 router.post('/login', usersController.login);
+router.get('/me', auth, usersController.profile)
 
 router.post('/check-auth', usersController.checkAuth)
 router.post('/check-admin', usersController.checkAdmin)

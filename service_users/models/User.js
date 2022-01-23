@@ -28,7 +28,7 @@ const userSchema = mongoose.Schema({
         trim: true,
         minlength: 6
     },
-    birthDate: {
+    birth_date: {
         type: Date,
         required: true
     },

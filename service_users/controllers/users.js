@@ -12,7 +12,7 @@ const list = async (req, res) => {
         _id: true,
         name: true,
         email: true,
-        birthDate: true,
+        birth_date: true,
         balance: true,
     });
 
@@ -66,7 +66,7 @@ const register = async (req, res) => {
             name,
             email,
             password,
-            birthDate: birth_date,
+            birth_date,
             gender,
             role: 'user'
         })
@@ -94,7 +94,7 @@ const create = async (req, res) => {
             name,
             email,
             password,
-            birthDate: birth_date,
+            birth_date,
             gender,
             role
         })
