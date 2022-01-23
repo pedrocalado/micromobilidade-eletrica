@@ -124,6 +124,19 @@ const login = async (req, res) => {
     });
 }
 
+const profile = async (req, res) => {
+    const user = await User.findOne({ email: req.user.email }, {
+        name: 1,
+        email: 1,
+        birth_date: 1,
+        gender: 1,
+        role: 1,
+        balance: 1
+    });
+
+    res.json(user);
+}
+
 const checkAuth = (req, res) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
@@ -174,6 +187,7 @@ module.exports = {
     create,
     register,
     login,
+    profile,
     checkAuth,
     checkAdmin
 }
