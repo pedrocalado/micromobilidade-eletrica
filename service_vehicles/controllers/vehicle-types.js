@@ -5,17 +5,23 @@ const list = async (req, res) => {
     const types = await VehicleType.find({}, {
         _id: true,
         name: true,
+        price: true
     });
 
     res.send(types);
 }
 
 const create = async (req, res) => {
-    const { name } = req.body;
+    const { name, price } = req.body;
+    const { value, period } = price;
 
     try {
         const type = await VehicleType.create({
-            name
+            name,
+            price: {
+                value,
+                period
+            }
         })
         res.status(201).send(type)
     } catch (error) {
@@ -23,7 +29,24 @@ const create = async (req, res) => {
     }
 }
 
+const details = async (req, res) => {
+    const id = req.params.id
+
+    try {
+        const vehicleType = await VehicleType.findById(id)
+
+        if (!vehicleType) {
+            return res.sendStatus(404)
+        }
+
+        res.json(vehicleType)
+    } catch (err) {
+        res.sendStatus(404)
+    }
+}
+
 module.exports = {
     list,
-    create
+    create,
+    details
 }

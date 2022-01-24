@@ -1,11 +1,7 @@
 const mongoose = require('mongoose');
 
 const priceSchema = mongoose.Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    price: {
+    value: {
         type: Number,
         required: true
     },
@@ -20,8 +16,8 @@ const schema = mongoose.Schema({
         type: String,
         required: true,
     },
-    prices: [priceSchema]
-});
+    price: priceSchema
+}, { collection: 'vehicle_types' });
 
 const VehicleType = mongoose.model('VehicleType', schema);
 
