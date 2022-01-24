@@ -45,11 +45,28 @@ const create = async (req, res) => {
     }
 }
 
+const details = async (req, res) => {
+    const id = req.params.id
+
+    try {
+        const vehicle = await Vehicle.findById(id)
+
+        if (!vehicle) {
+            return res.sendStatus(404)
+        }
+
+        res.json(vehicle)
+    } catch (err) {
+        res.sendStatus(404)
+    }
+}
+
 const listNearby = async (req, res) => {
     //TODO
 }
 
 module.exports = {
     list,
-    create
+    create,
+    details
 }
