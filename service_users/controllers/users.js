@@ -137,6 +137,40 @@ const profile = async (req, res) => {
     res.json(user);
 }
 
+const addBalance = async (req, res) => {
+    const id = req.params.id;
+    const { value } = req.body;
+
+    const user = await User.findByIdAndUpdate(id, {
+        $inc: {
+            balance: value
+        }
+    }, { new: true });
+
+    if (!user) {
+        return res.sendStatus(404)
+    }
+
+    res.json(user);
+}
+
+const removeBalance = async (req, res) => {
+    const id = req.params.id;
+    const { value } = req.body;
+
+    const user = await User.findByIdAndUpdate(id, {
+        $inc: {
+            balance: -value
+        }
+    }, { new: true });
+
+    if (!user) {
+        return res.sendStatus(404)
+    }
+
+    res.json(user);
+}
+
 const checkAuth = (req, res) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
@@ -188,6 +222,8 @@ module.exports = {
     register,
     login,
     profile,
+    addBalance,
+    removeBalance,
     checkAuth,
     checkAdmin
 }

@@ -31,6 +31,9 @@ router.post('/register', upload.single('picture'), validate(usersValidation.regi
 router.post('/login', usersController.login);
 router.get('/me', auth, usersController.profile)
 
+router.post('/:id/add-balance', usersController.addBalance)
+router.post('/:id/remove-balance', usersController.removeBalance)
+
 router.post('/check-auth', usersController.checkAuth)
 router.post('/check-admin', usersController.checkAdmin)
 
