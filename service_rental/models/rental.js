@@ -1,41 +1,32 @@
 const mongoose = require('mongoose');
-const uniqueValidator = require('mongoose-unique-validator');
-const validator = require('validator');
+// const uniqueValidator = require('mongoose-unique-validator');
+// const validator = require('validator');
 
 const rentalSchema = mongoose.Schema({
-    name: {
-        type: String,
-        required: true,
-        trim: true
+    // name: {
+    //     type: String,
+    //     required: true,
+    //     trim: true
+    // },
+    user_id: {
+        type: mongoose.Schema.Types.ObjectId,
     },
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-        trim: true,
-        lowercase: true,
-        validate(value) {
-            if (!validator.isEmail(value)) {
-                throw new Error('Invalid email');
-            }
-        }
-    },
-    startRentalDate: {
-        type: Date, 
+    start_rental_date: {
+        type: Date,
         required: true
     },
-    finishRentalDate: {
-        type: Date, 
+    finish_rental_date: {
+        type: Date,
         required: true
     },
     renew: {
-        type: Number, 
-        default:0
+        type: Number,
+        default: 0
     },
-    payableAmount: {
+    payable_amount: {
         type: Number
     },
-    amountPaid: {
+    amount_paid: {
         type: Number
     },
     paid: {
@@ -44,7 +35,7 @@ const rentalSchema = mongoose.Schema({
 }, {
     timestamps: true,
 });
-rentalSchema.plugin(uniqueValidator);
+// rentalSchema.plugin(uniqueValidator);
 
 /**
  * @typedef Rental
