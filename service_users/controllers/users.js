@@ -171,7 +171,7 @@ const checkAdmin = (req, res) => {
 
     jwt.verify(token, config.jwt.secret, async (err, user) => {
         if (err) {
-            return res.status(403).send()
+            return res.sendStatus(403)
         }
 
         const dbUser = await User.findOne({ email: user.email })
