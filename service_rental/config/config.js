@@ -20,7 +20,7 @@ if (error) {
 
 module.exports = {
     env: envVars.NODE_ENV,
-    port: envVars.SERVICE_USERS_PORT,
+    port: envVars.SERVICE_RENTAL_PORT,
     mongoose: {
         url: envVars.MONGODB_URL + (envVars.NODE_ENV === 'test' ? '-test' : ''),
         options: {
@@ -28,5 +28,16 @@ module.exports = {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         },
+    },
+    headerApiKey: envVars.HEADER_API_KEY,
+    usersService: {
+        me: `http://localhost:${envVars.SERVICE_USERS_PORT}/users/me`,
+        auth: `http://localhost:${envVars.SERVICE_USERS_PORT}/users/check-auth`,
+        admin: `http://localhost:${envVars.SERVICE_USERS_PORT}/users/check-admin`,
+        removeBalance: (id) => `http://localhost:${envVars.SERVICE_USERS_PORT}/users/${id}/remove-balance`,
+    },
+    vehiclesService: {
+        vehiclesUrl: `http://localhost:${envVars.SERVICE_VEHICLES_PORT}/vehicles`,
+        vehicleTypesUrl: `http://localhost:${envVars.SERVICE_VEHICLES_PORT}/vehicle-types`,
     }
 };

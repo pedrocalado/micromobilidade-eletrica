@@ -1,18 +1,13 @@
 const express = require('express');
-
-// const userRoutes = require('./users');
+const rentalController = require('../controllers/rental');
+const validate = require('../middlewares/validate');
+const rentalValidator = require('../validators/rental');
+const auth = require('../middlewares/auth');
+const admin = require('../middlewares/admin');
 
 const router = express.Router();
 
-const defaultRoutes = [
-    // {
-    //     path: '/users',
-    //     route: userRoutes,
-    // }
-]
-
-defaultRoutes.forEach((route) => {
-    router.use(route.path, route.route);
-});
+router.get('/', auth, admin, rentalController.list)
+router.post('/start', auth, validate(rentalValidator.start), rentalController.start)
 
 module.exports = router;
