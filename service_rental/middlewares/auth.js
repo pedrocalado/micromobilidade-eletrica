@@ -12,6 +12,7 @@ const auth = async (req, res, next) => {
         const usersServiceUrl = config.usersService.auth;
         const isAuth = await axios.post(usersServiceUrl, {}, {
             headers: {
+                "api-key": config.headerApiKey,
                 Authorization: `Bearer ${token}`
             }
         })
@@ -22,6 +23,7 @@ const auth = async (req, res, next) => {
             return res.sendStatus(403);
         }
     } catch (err) {
+        console.log("erro auth")
         return res.sendStatus(403);
     }
 }
