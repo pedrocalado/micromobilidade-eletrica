@@ -2,6 +2,7 @@ const express = require('express');
 const vehiclesController = require('../controllers/vehicles');
 const validate = require('../middlewares/validate');
 const vehiclesValidator = require('../validators/vehicles');
+const api = require('../middlewares/api');
 const auth = require('../middlewares/auth');
 const admin = require('../middlewares/admin');
 

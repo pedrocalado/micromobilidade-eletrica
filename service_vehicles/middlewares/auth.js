@@ -9,9 +9,10 @@ const auth = async (req, res, next) => {
 
     // Check it the token is valid in the users service
     try {
-        const usersServiceUrl = config.usersService.authUrl;
+        const usersServiceUrl = config.usersService.auth;
         const isAuth = await axios.post(usersServiceUrl, {}, {
             headers: {
+                "api-key": config.headerApiKey,
                 Authorization: `Bearer ${token}`
             }
         })

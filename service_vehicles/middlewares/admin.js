@@ -9,7 +9,7 @@ const admin = async (req, res, next) => {
 
     // Check it the user is admin
     try {
-        const usersServiceUrl = config.usersService.adminUrl;
+        const usersServiceUrl = config.usersService.admin;
         const isAdmin = await axios.post(usersServiceUrl, {}, {
             headers: {
                 Authorization: `Bearer ${token}`

@@ -29,8 +29,9 @@ module.exports = {
             useUnifiedTopology: true,
         },
     },
+    headerApiKey: envVars.HEADER_API_KEY,
     usersService: {
-        authUrl: `http://localhost:${envVars.SERVICE_USERS_PORT}/users/check-auth`,
-        adminUrl: `http://localhost:${envVars.SERVICE_USERS_PORT}/users/check-admin`,
+        auth: `http://localhost:${envVars.SERVICE_USERS_PORT}/users/check-auth`,
+        admin: `http://localhost:${envVars.SERVICE_USERS_PORT}/users/check-admin`,
     }
 };
