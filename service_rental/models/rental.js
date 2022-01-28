@@ -17,15 +17,29 @@ const rentalSchema = mongoose.Schema({
     },
     finish_rental_date: {
         type: Date,
+        // required: true
+    },
+    period: {
+        type: String,
+        enum: ['minute', 'hour', 'km'],
         required: true
     },
-    renew: {
+    price_per_period: {
+        type: Number,
+        required: true
+    },
+    // Períodos já descontados ao utilizador
+    periods_paid: {
         type: Number,
         default: 0
     },
-    payable_amount: {
-        type: Number
-    },
+    // renew: {
+    //     type: Number,
+    //     default: 0
+    // },
+    // payable_amount: {
+    //     type: Number
+    // },
     amount_paid: {
         type: Number
     },

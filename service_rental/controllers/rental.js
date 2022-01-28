@@ -5,7 +5,11 @@ const { Rental } = require('../models');
 const start = async (req, res) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
-    const { vehicle_id } = req.body;
+
+    // Value represents the amount of 'minute', 'hour' or 'km' 
+    // the user wants, depending on the vehicle_type
+
+    const { vehicle_id, value } = req.body;
 
     // Get the current user data
 
@@ -70,14 +74,9 @@ const start = async (req, res) => {
         })
     }
 
-    const { value, period } = vehicleType.price;
+    const { price } = vehicleType;
 
-    // return res.json(vehicleType)
-
-    // Inicialmente, é sempre descontado o valor da tarifa do tipo de veículo
-    // Verificar se o utilizador possui este valor mínimo
-
-    if (userBalance < value) {
+    if (userBalance < price.value) {
         return res.status(400).json({
             message: "O utilizador não possui saldo suficiente."
         })
@@ -85,24 +84,27 @@ const start = async (req, res) => {
 
     try {
         const startDate = Date.now();
-        const rental = await Rental.create({
+        let rental = await Rental.create({
             vehicle_id,
             user_id: userId,
+            period: price.period,
+            price_per_period: price.value,
             start_rental_date: startDate,
         })
 
         // Remove value from user's balance
         const usersServiceUrl = config.usersService.removeBalance(userId)
-        console.log(usersServiceUrl)
-        const response = await axios.post(usersServiceUrl, {
-            value
+        await axios.post(usersServiceUrl, {
+            value: price.value
         }, {
             headers: {
-                "API-Key": config.headerApiKey
+                "api-key": config.headerApiKey
             }
         })
 
-        console.log(response.data)
+        rental = await Rental.findByIdAndUpdate(rental.id, {
+            periods_paid: 1,
+        }, { new: true })
 
         res.status(201).send(rental)
     } catch (error) {
@@ -110,9 +112,43 @@ const start = async (req, res) => {
     }
 }
 
+const check = async (req, res) => {
+    const id = req.params.id
+
+    let rental;
+
+    try {
+        rental = await Rental.findById(id)
+    } catch (err) {
+        return res.sendStatus(404)
+    }
+
+    if (!rental) {
+        return res.sendStatus(404)
+    }
+
+    let nextPayment = null;
+    const startDate = new Date(rental.start_rental_date);
+    const now = new Date();
+
+    console.log(startDate)
+
+    if (rental.period === 'minute' || rental.period === 'hour') {
+        // const paidUntil =
+        const minutesPaid = rental.period === 'hour' ? 60 * rental.periods_paid : rental.periods_paid;
+        const paidUntil = new Date().setTime(startDate.getTime() + (minutesPaid * 60 * 1000))
+        console.log(paidUntil)
+    } /* else if(rental.period === 'km') {
+        
+    } */
+
+    res.json(rental)
+}
+
 const list = () => { }
 
 module.exports = {
     start,
+    check,
     list
 }
