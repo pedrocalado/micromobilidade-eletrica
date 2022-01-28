@@ -45,4 +45,5 @@ module.exports = {
         secret: envVars.JWT_SECRET,
         expiresIn: envVars.JWT_ACCESS_EXPIRATION_SECONDS,
     },
+    headerApiKey: envVars.HEADER_API_KEY,
 };

@@ -158,6 +158,8 @@ const removeBalance = async (req, res) => {
     const id = req.params.id;
     const { value } = req.body;
 
+    console.log(value)
+
     const user = await User.findByIdAndUpdate(id, {
         $inc: {
             balance: -value

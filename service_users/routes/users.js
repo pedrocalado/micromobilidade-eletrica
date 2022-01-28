@@ -3,6 +3,7 @@ const usersController = require('../controllers/users');
 const validate = require('../middlewares/validate');
 const usersValidation = require('../validators/users');
 const auth = require('../middlewares/auth');
+const api = require('../middlewares/api');
 const multer = require('multer');
 var db = require('mime-db')
 
@@ -31,10 +32,10 @@ router.post('/register', upload.single('picture'), validate(usersValidation.regi
 router.post('/login', usersController.login);
 router.get('/me', auth, usersController.profile)
 
-router.post('/:id/add-balance', usersController.addBalance)
-router.post('/:id/remove-balance', usersController.removeBalance)
+router.post('/:id/add-balance', api, usersController.addBalance)
+router.post('/:id/remove-balance', api, usersController.removeBalance)
 
-router.post('/check-auth', usersController.checkAuth)
-router.post('/check-admin', usersController.checkAdmin)
+router.post('/check-auth', api, usersController.checkAuth)
+router.post('/check-admin', api, usersController.checkAdmin)
 
 module.exports = router;
