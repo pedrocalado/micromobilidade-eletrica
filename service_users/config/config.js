@@ -11,6 +11,8 @@ const envVarsSchema = Joi.object()
         MONGODB_URL: Joi.string().required().description('Mongo DB url'),
         JWT_SECRET: Joi.string().required().description('JWT secret key'),
         JWT_ACCESS_EXPIRATION_SECONDS: Joi.number().default(3600).description('seconds after which access tokens expire'),
+        SERVICE_GENDER_AGE_HOST: Joi.string(),
+        SERVICE_GENDER_AGE_PORT: Joi.number(),
     })
     .unknown();
 
@@ -32,7 +34,7 @@ module.exports = {
         },
     },
     genderAge: {
-        url: 'http://localhost:5002/api/predict'
+        url: `http://${envVars.SERVICE_GENDER_AGE_HOST}:${envVars.SERVICE_GENDER_AGE_PORT}/api/predict`
     },
     jwt: {
         secret: envVars.JWT_SECRET,
