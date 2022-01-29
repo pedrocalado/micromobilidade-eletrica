@@ -34,32 +34,35 @@ const register = async (req, res) => {
             });
         }
 
-        // Age and gender
-        const genderAgeUrl = config.genderAge.url;
+        if (file) {
+            // Age and gender
+            const genderAgeUrl = config.genderAge.url;
 
-        const imagePath = path.join(__dirname + '/..', file.path);
-        const image = fs.createReadStream(imagePath);
+            const imagePath = path.join(__dirname + '/..', file.path);
+            const image = fs.createReadStream(imagePath);
 
-        let form = new FormData();
-        form.append('image', image);
+            let form = new FormData();
+            form.append('image', image);
 
-        let predictGender = predictAge = null;
+            let predictGender = predictAge = null;
 
-        try {
-            genderAge = await axios.post(genderAgeUrl, form, { headers: form.getHeaders() });
+            try {
+                genderAge = await axios.post(genderAgeUrl, form, { headers: form.getHeaders() });
 
-            predictGender = genderAge?.data?.gender;
-            predictAge = genderAge?.data?.age;
+                predictGender = genderAge?.data?.gender;
+                predictAge = genderAge?.data?.age;
 
-            if (predictAge < 16) {
-                res.status(201).send({
-                    error: "A fotografia introduzida indica que a idade é inferior a 16 anos."
+                if (predictAge < 16) {
+                    res.status(201).send({
+                        error: "A fotografia introduzida indica que a idade é inferior a 16 anos."
+                    });
+                }
+            } catch (err) {
+                console.log(err)
+                return res.status(400).send({
+                    error: "Error validating gender and age."
                 });
             }
-        } catch (err) {
-            // return res.status(400).send({
-            //     error: "Error validating gender and age."
-            // });
         }
 
         const user = await User.create({
@@ -72,6 +75,7 @@ const register = async (req, res) => {
         })
         res.status(201).send(user)
     } catch (error) {
+        console.log(error)
         res.status(400).send(error)
     }
 }
