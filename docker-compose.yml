@@ -1,17 +1,97 @@
 version: "1"
 services:
-  # database:
-  #   image: mongo:latest
-  #   container_name: database
-  #   ports:
-  #     - "27017:27017"
-  #   restart: always
+  database:
+    image: mongo:latest
+    container_name: database
+    hostname: "${MONGODB_HOST}"
+    env_file: .env
+    expose:
+      - "${MONGODB_PORT}"
+    ports:
+      - "${MONGODB_PORT}:27017"
+    volumes:
+      - "dbdata:/data/db"
+    networks:
+      - node-network
+    restart: "${DOCKER_RESTART}"
+
+  api_gateway:
+    build: ./api_gateway
+    hostname: "api_gateway"
+    container_name: "api_gateway"
+    env_file: .env
+    ports:
+      - "${API_GATEWAY_PORT}:5000"
+    environment:
+      - NODE_ENV=development
+      - PORT=5000
+      - SERVICE_USERS_PORT=${SERVICE_USERS_PORT}
+      - SERVICE_VEHICLES_PORT=${SERVICE_VEHICLES_PORT}
+      - SERVICE_RENTAL_PORT=${SERVICE_RENTAL_PORT}
+    depends_on:
+      - mongodb
+    networks:
+      - node-network
+    restart: "${DOCKER_RESTART}"
 
   service_gender_age:
     build: ./service_gender_age
     ports:
-      - 5002:9000
-    restart: always
+      - ${SERVICE_GENDER_AGE_PORT}:9000
+    restart: "${DOCKER_RESTART}"
+
+  service_users:
+    build: ./service_users
+    hostname: "service_users"
+    container_name: "service_users"
+    env_file: .env
+    ports:
+      - "${SERVICE_USERS_PORT}:5000"
+    environment:
+      - NODE_ENV=development
+      - PORT=5000
+      - MONGODB_URL=${MONGODB_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_ACCESS_EXPIRATION_SECONDS=${JWT_ACCESS_EXPIRATION_SECONDS}
+    depends_on:
+      - mongodb
+    networks:
+      - node-network
+    restart: "${DOCKER_RESTART}"
+
+  service_vehicles:
+    build: ./service_vehicles
+    hostname: "service_vehicles"
+    container_name: "service_vehicles"
+    env_file: .env
+    ports:
+      - "${SERVICE_VEHICLES_PORT}:5000"
+    environment:
+      - NODE_ENV=development
+      - PORT=5000
+      - MONGODB_URL=${MONGODB_URL}
+    depends_on:
+      - mongodb
+    networks:
+      - node-network
+    restart: "${DOCKER_RESTART}"
+
+  service_rental:
+    build: ./service_rental
+    hostname: "service_rental"
+    container_name: "service_rental"
+    env_file: .env
+    ports:
+      - "${SERVICE_RENTAL_PORT}:5000"
+    environment:
+      - NODE_ENV=development
+      - PORT=5000
+      - MONGODB_URL=${MONGODB_URL}
+    depends_on:
+      - mongodb
+    networks:
+      - node-network
+    restart: "${DOCKER_RESTART}"
 
   # service_vehicles:
   #   build: ./pasta_do_servico
@@ -22,3 +102,9 @@ services:
   #     - DBHOST=mongodb://database:3017
   #     - DBNAME=vehicles_db
   #   restart: "no"
+
+volumes:
+  dbdata: null
+networks:
+  node-network:
+    driver: bridge

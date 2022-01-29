@@ -3,20 +3,21 @@ const httpProxy = require('express-http-proxy');
 const { setupLogging } = require("./logging");
 
 const app = express();
-const port = 3002;
+const port = process.env.PORT;
+const usersPort = process.env.SERVICE_USERS_PORT;
+const vehiclesPort = process.env.SERVICE_VEHICLES_PORT;
+const rentalPort = process.env.SERVICE_RENTAL_PORT;
 
 setupLogging(app);
-
-app.get('/hello', (req, resp) => {
-    return resp.send('HELLO WORLD!');
-})
 
 function selectProxyHost(req) {
     switch (true) {
         case req.path.startsWith('/users'):
-            return 'http://localhost:5000/';
+            return `http://localhost:${usersPort}/`;
         case req.path.startsWith('/vehicles'):
-            return 'http://localhost:3001/';
+            return `http://localhost:${usersPort}/`;
+        case req.path.startsWith('/rental'):
+            return `http://localhost:${rentalPort}/`;
         default:
             return null;
     }
