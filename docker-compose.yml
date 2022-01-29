@@ -23,7 +23,6 @@ services:
     ports:
       - "${API_GATEWAY_PORT}:${API_GATEWAY_PORT}"
     environment:
-      - NODE_ENV=development
       - PORT=${API_GATEWAY_PORT}
       - SERVICE_USERS_HOST=${SERVICE_USERS_HOST}
       - SERVICE_USERS_PORT=${SERVICE_USERS_PORT}
@@ -53,7 +52,6 @@ services:
     ports:
       - "${SERVICE_USERS_PORT}:${SERVICE_USERS_PORT}"
     environment:
-      - NODE_ENV=development
       - PORT=${SERVICE_USERS_PORT}
       - MONGODB_URL=${MONGODB_URL}
       - JWT_SECRET=${JWT_SECRET}
@@ -76,7 +74,6 @@ services:
     ports:
       - "${SERVICE_VEHICLES_PORT}:${SERVICE_VEHICLES_PORT}"
     environment:
-      - NODE_ENV=development
       - PORT=${SERVICE_VEHICLES_PORT}
       - MONGODB_URL=${MONGODB_URL}
     depends_on:
@@ -93,7 +90,6 @@ services:
     ports:
       - "${SERVICE_RENTAL_PORT}:${SERVICE_RENTAL_PORT}"
     environment:
-      - NODE_ENV=development
       - PORT=${SERVICE_RENTAL_PORT}
       - MONGODB_URL=${MONGODB_URL}
     depends_on:
