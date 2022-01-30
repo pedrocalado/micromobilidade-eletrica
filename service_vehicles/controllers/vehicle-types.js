@@ -45,8 +45,34 @@ const details = async (req, res) => {
     }
 }
 
+const update = async (req, res) => {
+    const id = req.params.id;
+
+    const { name, price } = req.body;
+    const { value, period } = price;
+
+    try {
+        const vehicleType = await VehicleType.findByIdAndUpdate(id, {
+            name,
+            price: {
+                value,
+                period
+            }
+        }, { new: true })
+
+        if (!vehicleType) {
+            return res.sendStatus(404)
+        }
+
+        res.json(vehicleType)
+    } catch (err) {
+        res.sendStatus(404)
+    }
+}
+
 module.exports = {
     list,
     create,
-    details
+    details,
+    update
 }

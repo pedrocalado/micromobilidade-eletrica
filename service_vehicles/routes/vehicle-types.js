@@ -12,5 +12,6 @@ router.route('/')
     .post(auth, admin, validate(vehicleTypesValidator.create), vehicleTypesController.create)
 
 router.get('/:id', auth, vehicleTypesController.details)
+router.put('/:id', auth, admin, validate(vehicleTypesValidator.create), vehicleTypesController.update)
 
 module.exports = router;

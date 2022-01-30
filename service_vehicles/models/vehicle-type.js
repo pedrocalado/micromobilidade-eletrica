@@ -7,7 +7,7 @@ const priceSchema = mongoose.Schema({
     },
     period: {
         type: String,
-        enum: ['minute', 'hour', 'km'],
+        enum: ['minute', 'hour'],
         required: true
     }
 });
