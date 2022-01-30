@@ -83,6 +83,26 @@ const listNearby = async (req, res) => {
     res.json(vehicles);
 }
 
+const update = async (req, res) => {
+    const id = req.params.id;
+
+    const { registration, year, month, vehicle_type_id } = req.body;
+
+    try {
+        const vehicle = await Vehicle.findByIdAndUpdate(id, {
+            registration, year, month, vehicle_type_id
+        }, { new: true })
+
+        if (!vehicle) {
+            return res.sendStatus(404)
+        }
+
+        res.json(vehicle)
+    } catch (err) {
+        res.sendStatus(404)
+    }
+}
+
 const updateAvailableStatus = async (req, res) => {
     const id = req.params.id
     const { available } = req.body
@@ -153,6 +173,7 @@ module.exports = {
     details,
     updateAvailableStatus,
     listNearby,
+    update,
     updateLocation,
     updateAutonomy
 }

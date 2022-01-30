@@ -14,6 +14,7 @@ router.route('/')
 
 router.get('/near', vehiclesController.listNearby)
 router.get('/:id', auth, vehiclesController.details)
+router.put('/:id', auth, admin, validate(vehiclesValidator.update), vehiclesController.update)
 router.put('/:id/status', api, vehiclesController.updateAvailableStatus)
 router.put('/:id/location', api, vehiclesController.updateLocation)
 router.put('/:id/autonomy', api, vehiclesController.updateAutonomy)
