@@ -12,6 +12,10 @@ router.route('/')
     .get(vehiclesController.list)
     .post(auth, admin, validate(vehiclesValidator.create), vehiclesController.create)
 
+router.get('/near', vehiclesController.listNearby)
 router.get('/:id', auth, vehiclesController.details)
+router.put('/:id/status', api, vehiclesController.updateAvailableStatus)
+router.put('/:id/location', api, vehiclesController.updateLocation)
+router.put('/:id/autonomy', api, vehiclesController.updateAutonomy)
 
 module.exports = router;

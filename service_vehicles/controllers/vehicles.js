@@ -62,25 +62,6 @@ const details = async (req, res) => {
     }
 }
 
-const updateAvailableStatus = async (req, res) => {
-    const id = req.params.id
-    const { available } = req.body
-
-    try {
-        const vehicle = await Vehicle.findByIdAndUpdate(id, {
-            available
-        }, { new: true })
-
-        if (!vehicle) {
-            return res.sendStatus(404)
-        }
-
-        res.json(vehicle)
-    } catch (err) {
-        res.sendStatus(404)
-    }
-}
-
 const listNearby = async (req, res) => {
     const km = req.query.distance ?? 1;
     const lat = req.query.lat;
@@ -102,10 +83,76 @@ const listNearby = async (req, res) => {
     res.json(vehicles);
 }
 
+const updateAvailableStatus = async (req, res) => {
+    const id = req.params.id
+    const { available } = req.body
+
+    try {
+        const vehicle = await Vehicle.findByIdAndUpdate(id, {
+            available
+        }, { new: true })
+
+        if (!vehicle) {
+            return res.sendStatus(404)
+        }
+
+        res.json(vehicle)
+    } catch (err) {
+        res.sendStatus(404)
+    }
+}
+
+const updateLocation = async (req, res) => {
+    const id = req.params.id
+    const { lat, lon } = req.body
+
+    console.log(id)
+    console.log(lat)
+    console.log(lon)
+
+    try {
+        const vehicle = await Vehicle.findByIdAndUpdate(id, {
+            "location.coordinates": [lat, lon]
+        }, { new: true })
+
+        console.log(vehicle)
+
+        if (!vehicle) {
+            return res.sendStatus(404)
+        }
+
+        res.json(vehicle)
+    } catch (err) {
+        console.log(err)
+        res.sendStatus(400)
+    }
+}
+
+const updateAutonomy = async (req, res) => {
+    const id = req.params.id
+    const { value } = req.body
+
+    try {
+        const vehicle = await Vehicle.findByIdAndUpdate(id, {
+            current_autonomy: value
+        }, { new: true })
+
+        if (!vehicle) {
+            return res.sendStatus(404)
+        }
+
+        res.json(vehicle)
+    } catch (err) {
+        res.sendStatus(404)
+    }
+}
+
 module.exports = {
     list,
     create,
     details,
     updateAvailableStatus,
-    listNearby
+    listNearby,
+    updateLocation,
+    updateAutonomy
 }
