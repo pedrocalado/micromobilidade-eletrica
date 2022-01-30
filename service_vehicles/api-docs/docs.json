@@ -1,0 +1,422 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Micro services - Vehicles",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000"
+    }
+  ],
+  "paths": {
+    "/vehicle-types": {
+      "get": {
+        "description": "Apresenta todos os tipos de veículos",
+        "responses": {
+          "200": {
+            "description": "Todos os veículos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/objVehicleTypeResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Criar um novo tipo de veículo",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/objVehicleTypeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Novo tipo de veiculo criado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/objVehicleTypeResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/vehicle-types/{id}": {
+      "get": {
+        "description": "Apresenta o tipo de veículo",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "[a-zA-Z0-9]+"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Detalhes do aluno",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/objVehicleTypeResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/vehicles": {
+      "get": {
+        "description": "Apresenta todos os veículos",
+        "responses": {
+          "200": {
+            "description": "Todos os veículos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/objVehicleResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Criar um novo veículo",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/objVehicleRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Novo veiculo criado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/objVehicleResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/vehicles/{id}": {
+      "get": {
+        "description": "Apresenta o veículo selecinado",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "[a-zA-Z0-9]+"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Veículo selecionado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/objVehicleResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/vehicles/{id}/status": {
+      "put": {
+        "description": "Actualiza o status do veiculo",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "[a-zA-Z0-9]+"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "available": {
+              "schema": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Todos os veículos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/objVehicleResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/vehicles/{id}/location": {
+      "put": {
+        "description": "Actualiza a localização do veiculo",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "[a-zA-Z0-9]+"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/objCoordinateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Todos os veículos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/objVehicleResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/vehicles/{id}/autonomy": {
+      "put": {
+        "description": "Actualiza a localização do veiculo",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "[a-zA-Z0-9]+"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "value": {
+              "schema": {
+                "type": "number"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Todos os veículos",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/objVehicleResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "objVehicleTypeResponse": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "price": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "number"
+              },
+              "period": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "objVehicleTypeRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "price": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "number"
+              },
+              "period": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "objVehicleResponse": {
+        "type": "object",
+        "properties": {
+          "registration": {
+            "type": "string"
+          },
+          "year": {
+            "type": "number"
+          },
+          "month": {
+            "type": "number"
+          },
+          "vehicle_type_id": {
+            "type": "string"
+          },
+          "location": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "coordinates": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "available": {
+            "type": "boolean"
+          },
+          "max_autonomy": {
+            "type": "number"
+          },
+          "current_autonomy": {
+            "type": "number"
+          }
+        }
+      },
+      "objVehicleRequest": {
+        "type": "object",
+        "properties": {
+          "registration": {
+            "type": "string"
+          },
+          "year": {
+            "type": "number"
+          },
+          "month": {
+            "type": "number"
+          },
+          "vehicle_type_id": {
+            "type": "string"
+          },
+          "location": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "coordinates": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                }
+              }
+            }
+          },
+          "available": {
+            "type": "boolean"
+          },
+          "max_autonomy": {
+            "type": "number"
+          },
+          "current_autonomy": {
+            "type": "number"
+          }
+        }
+      },
+      "objCoordinateRequest": {
+        "type": "object",
+        "properties": {
+          "lat": {
+            "type": "number"
+          },
+          "lon": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "responses": {
+      "400BadRequest": {
+        "description": "Bad request."
+      }
+    }
+  }
+}

@@ -18,6 +18,7 @@ if (error) {
 }
 
 module.exports = {
+    // port: envVars.SERVICE_RENTAL_PORT,
     port: envVars.PORT,
     mongoose: {
         url: envVars.MONGODB_URL,

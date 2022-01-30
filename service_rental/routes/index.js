@@ -8,9 +8,10 @@ const admin = require('../middlewares/admin');
 
 const router = express.Router();
 
-router.get('/', auth, admin, rentalController.list)
 router.post('/start', auth, validate(rentalValidator.start), rentalController.start)
+router.post('/:id/stop', auth, rentalController.stop)
 router.get('/:id/check', api, rentalController.check)
 router.get('/active-rental', auth, rentalController.userActiveRental)
+router.get('/my-rentals', auth, rentalController.userRentals)
 
 module.exports = router;
