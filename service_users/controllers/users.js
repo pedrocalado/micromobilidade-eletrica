@@ -141,6 +141,22 @@ const profile = async (req, res) => {
     res.json(user);
 }
 
+const details = async (req, res) => {
+    const id = req.params.id
+
+    try {
+        const user = await User.findById(id)
+
+        if (!user) {
+            return res.sendStatus(404)
+        }
+
+        res.json(user)
+    } catch (err) {
+        res.sendStatus(404)
+    }
+}
+
 const addBalance = async (req, res) => {
     const id = req.params.id;
     const { value } = req.body;
@@ -228,6 +244,7 @@ module.exports = {
     register,
     login,
     profile,
+    details,
     addBalance,
     removeBalance,
     checkAuth,
