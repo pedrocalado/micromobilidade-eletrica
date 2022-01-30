@@ -1,0 +1,449 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API Presenças",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5001"
+    }
+  ],
+  "paths": {
+    "/users/register": {
+      "post": {
+        "description": "Registo do utilizador",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/objUserRegisterRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Utilizador registado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/objUserResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "description": "Login do utilizador",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/objLoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login realizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/objLoginResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/me": {
+      "get": {
+        "description": "Perfil do utilizador autenticado",
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Detalhes do utilizador",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/objUserResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users": {
+      "post": {
+        "description": "Criar um novo utilizador",
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/objUserCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Utilizador registado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/objUserResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "description": "Apresenta todos os utilizadores",
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Todos os utilizadores",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/objUserResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "description": "Apresenta detalhes do utilizador",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "[a-zA-Z0-9]+"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Detalhes do utilizador",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/objUserResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}/add-balance": {
+      "post": {
+        "description": "Adiciona saldo ao utilizador",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "[a-zA-Z0-9]+"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/objBalanceRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Detalhes do utilizador",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/objUserResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}/remove-balance": {
+      "post": {
+        "description": "Retira saldo ao utilizador",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "[a-zA-Z0-9]+"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/objBalanceRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Detalhes do utilizador",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/objUserResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/check-auth": {
+      "post": {
+        "description": "Verifica se o utilizador está autenticado",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Verificação",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/objCheckAuthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/check-admin": {
+      "post": {
+        "description": "Verifica se o utilizador é administrador",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Verificação",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/objCheckAuthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "objUserRegisterRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "birth_date": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-11-22T09:00:00.000Z"
+          },
+          "gender": {
+            "type": "string"
+          }
+        }
+      },
+      "objUserCreateRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "birth_date": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-11-22T09:00:00.000Z"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          }
+        }
+      },
+      "objLoginRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "objBalanceRequest": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number"
+          }
+        }
+      },
+      "objUserResponse": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "birth_date": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-11-22T09:00:00.000Z"
+          },
+          "gender": {
+            "type": "string"
+          },
+          "balance": {
+            "type": "number"
+          },
+          "role": {
+            "type": "string"
+          }
+        }
+      },
+      "objLoginResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          },
+          "expires": {
+            "type": "number"
+          }
+        }
+      },
+      "objCheckAuthResponse": {
+        "type": "object",
+        "properties": {
+          "is_authenticated": {
+            "type": "boolean"
+          },
+          "expires": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "responses": {
+      "400BadRequest": {
+        "description": "Bad request."
+      }
+    },
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "api-key"
+      },
+      "Bearer": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization"
+      }
+    }
+  }
+}
