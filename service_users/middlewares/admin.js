@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config/config');
+const { User } = require('../models')
 
 const admin = (req, res, next) => {
     const authHeader = req.headers['authorization'];
@@ -7,7 +8,7 @@ const admin = (req, res, next) => {
 
     if (token == null) return res.sendStatus(401);
 
-    jwt.verify(token, config.jwt.secret, (err, user) => {
+    jwt.verify(token, config.jwt.secret, async (err, user) => {
         if (err) return res.sendStatus(403);
 
         const dbUser = await User.findOne({ email: user.email })
