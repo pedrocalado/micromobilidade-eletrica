@@ -1,5 +1,19 @@
 const mongoose = require('mongoose');
 
+const pointSchema = new mongoose.Schema({
+    geometry: {
+        type: {
+            type: String,
+            enum: ['Point'],
+            required: true
+        },
+        coordinates: {
+            type: [Number],
+            required: true
+        }
+    }
+});
+
 const schema = mongoose.Schema({
     registration: {
         type: String,
@@ -17,15 +31,24 @@ const schema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "VehicleType"
     },
-    coordinates: {
-        lat: {
-            type: Number
-        },
-        lon: {
-            type: Number
-        }
+    location: pointSchema,
+    available: {
+        type: Boolean,
+        default: true
+    },
+    max_autonomy: {
+        type: Number,
+        required: true
+    },
+    current_autonomy: {
+        type: Number,
+        required: true
     }
 });
+
+schema.index({
+    location: "2dsphere"
+})
 
 const Vehicle = mongoose.model('Vehicle', schema);
 

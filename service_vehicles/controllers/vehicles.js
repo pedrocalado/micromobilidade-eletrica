@@ -12,9 +12,10 @@ const list = async (req, res) => {
 
     const data = [];
     for (vehicle of vehicles) {
-        const type = await VehicleType.findById(vehicle.vehicle_type_id, { _id: true, name: true });
+        const type = await VehicleType.findById(vehicle.vehicle_type_id, { _id: true, name: true, price: true });
 
         data.push({
+            _id: vehicle._id,
             registration: vehicle.registration,
             year: vehicle.year,
             month: vehicle.month,
@@ -26,7 +27,7 @@ const list = async (req, res) => {
 }
 
 const create = async (req, res) => {
-    const { registration, year, month, vehicle_type_id } = req.body;
+    const { registration, year, month, vehicle_type_id, max_autonomy, current_autonomy } = req.body;
 
     try {
         // Check if vehicle type exists
@@ -37,7 +38,7 @@ const create = async (req, res) => {
         }
 
         const vehicle = await Vehicle.create({
-            registration, year, month, vehicle_type_id
+            registration, year, month, vehicle_type_id, max_autonomy, current_autonomy
         })
         res.status(201).send(vehicle)
     } catch (error) {
@@ -61,12 +62,50 @@ const details = async (req, res) => {
     }
 }
 
+const updateAvailableStatus = async (req, res) => {
+    const id = req.params.id
+    const { available } = req.body
+
+    try {
+        const vehicle = await Vehicle.findByIdAndUpdate(id, {
+            available
+        }, { new: true })
+
+        if (!vehicle) {
+            return res.sendStatus(404)
+        }
+
+        res.json(vehicle)
+    } catch (err) {
+        res.sendStatus(404)
+    }
+}
+
 const listNearby = async (req, res) => {
-    //TODO
+    const km = req.query.distance ?? 1;
+    const lat = req.query.lat;
+    const lon = req.query.lon;
+
+    const vehicles = await Vehicle.find({
+        available: 1,
+        location: {
+            $near: {
+                $geometry: {
+                    type: 'Point',
+                    coordinates: [lat, lon]
+                },
+                $maxDistance: km * 1000
+            }
+        }
+    }, { registration: 1 });
+
+    res.json(vehicles);
 }
 
 module.exports = {
     list,
     create,
-    details
+    details,
+    updateAvailableStatus,
+    listNearby
 }
