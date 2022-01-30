@@ -11,13 +11,15 @@ const rentalSchema = mongoose.Schema({
     user_id: {
         type: mongoose.Schema.Types.ObjectId,
     },
+    vehicle_id: {
+        type: mongoose.Schema.Types.ObjectId,
+    },
     start_rental_date: {
         type: Date,
         required: true
     },
     finish_rental_date: {
         type: Date,
-        // required: true
     },
     period: {
         type: String,
@@ -33,19 +35,14 @@ const rentalSchema = mongoose.Schema({
         type: Number,
         default: 0
     },
-    // renew: {
-    //     type: Number,
-    //     default: 0
-    // },
-    // payable_amount: {
-    //     type: Number
-    // },
+    status: {
+        type: String,
+        enum: ['in_progress', 'completed'],
+        default: 'in_progress'
+    },
     amount_paid: {
         type: Number
     },
-    paid: {
-        type: Boolean
-    }
 }, {
     timestamps: true,
 });

@@ -12,6 +12,7 @@ const admin = async (req, res, next) => {
         const usersServiceUrl = config.usersService.admin;
         const isAdmin = await axios.post(usersServiceUrl, {}, {
             headers: {
+                "api-key": config.headerApiKey,
                 Authorization: `Bearer ${token}`
             }
         })

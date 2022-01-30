@@ -29,12 +29,14 @@ module.exports = {
     },
     headerApiKey: envVars.HEADER_API_KEY,
     usersService: {
+        url: `http://localhost:${envVars.SERVICE_USERS_PORT}/users`,
         me: `http://localhost:${envVars.SERVICE_USERS_PORT}/users/me`,
         auth: `http://localhost:${envVars.SERVICE_USERS_PORT}/users/check-auth`,
         admin: `http://localhost:${envVars.SERVICE_USERS_PORT}/users/check-admin`,
         removeBalance: (id) => `http://localhost:${envVars.SERVICE_USERS_PORT}/users/${id}/remove-balance`,
     },
     vehiclesService: {
+        url: `http://localhost:${envVars.SERVICE_VEHICLES_PORT}`,
         vehiclesUrl: `http://localhost:${envVars.SERVICE_VEHICLES_PORT}/vehicles`,
         vehicleTypesUrl: `http://localhost:${envVars.SERVICE_VEHICLES_PORT}/vehicle-types`,
     }
