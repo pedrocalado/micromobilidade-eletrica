@@ -16,7 +16,9 @@
     "express": "^4.17.1",
     "joi": "^17.5.0",
     "joi-objectid": "^4.0.2",
-    "mongoose": "^6.0.14"
+    "mongoose": "^6.0.14",
+    "swagger-jsdoc": "^6.1.0",
+    "swagger-ui-express": "^4.3.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
