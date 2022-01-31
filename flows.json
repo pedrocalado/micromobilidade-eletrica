@@ -1,1510 +1,1276 @@
 [
-    {
-        "id": "51979bdd7fc2c3b7",
-        "type": "tab",
-        "label": "Micromobilidade elétrica",
-        "disabled": false,
-        "info": ""
-    },
-    {
-        "id": "f0fc1f87bfd61d79",
-        "type": "ui_form",
-        "z": "51979bdd7fc2c3b7",
-        "name": "",
-        "label": "Login",
-        "group": "1899c06189b50083",
-        "order": 1,
-        "width": 0,
-        "height": 0,
-        "options": [
-            {
-                "label": "E-mail",
-                "value": "email",
-                "type": "text",
-                "required": true,
-                "rows": null
-            },
-            {
-                "label": "Password",
-                "value": "password",
-                "type": "password",
-                "required": true,
-                "rows": null
-            }
-        ],
-        "formValue": {
-            "email": "",
-            "password": ""
-        },
-        "payload": "",
-        "submit": "Login",
-        "cancel": "cancel",
-        "topic": "topic",
-        "topicType": "msg",
-        "splitLayout": "",
-        "className": "",
-        "x": 210,
-        "y": 100,
-        "wires": [
-            [
-                "1c8f1ecd1d91c43e"
-            ]
-        ]
-    },
-    {
-        "id": "1c8f1ecd1d91c43e",
-        "type": "http request",
-        "z": "51979bdd7fc2c3b7",
-        "name": "Login request",
-        "method": "POST",
-        "ret": "obj",
-        "paytoqs": "ignore",
-        "url": "localhost:5001/users/login",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "authType": "",
-        "x": 500,
-        "y": 100,
-        "wires": [
-            [
-                "35f637014958a928"
-            ]
-        ]
-    },
-    {
-        "id": "35f637014958a928",
-        "type": "function",
-        "z": "51979bdd7fc2c3b7",
-        "name": "Login verification",
-        "func": "console.log(msg)\n\nif(msg.statusCode == 200) {\n    msg.payload.result = 1;\n    flow.set(\"token\", msg.payload.token)\n} else if(msg.statusCode == 403) {\n    msg.payload.result = 2;\n} else {\n    msg.payload.result = 3\n}\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 250,
-        "y": 220,
-        "wires": [
-            [
-                "5358c9f25d8b11ff"
-            ]
-        ]
-    },
-    {
-        "id": "078dca1e7d723e62",
-        "type": "ui_dropdown",
-        "z": "51979bdd7fc2c3b7",
-        "name": "",
-        "label": "Vehicles list",
-        "tooltip": "",
-        "place": "Select option",
-        "group": "ea31a6383d9ae204",
-        "order": 5,
-        "width": 0,
-        "height": 0,
-        "passthru": true,
-        "multiple": false,
-        "options": [],
-        "payload": "",
-        "topic": "selectedVehicle",
-        "topicType": "flow",
-        "className": "",
-        "x": 930,
-        "y": 700,
-        "wires": [
-            [
-                "f2d58d65d9cc4072"
-            ]
-        ]
-    },
-    {
-        "id": "5358c9f25d8b11ff",
-        "type": "switch",
-        "z": "51979bdd7fc2c3b7",
-        "name": "",
-        "property": "payload.result",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "eq",
-                "v": "1",
-                "vt": "num"
-            },
-            {
-                "t": "eq",
-                "v": "2",
-                "vt": "num"
-            },
-            {
-                "t": "eq",
-                "v": "3",
-                "vt": "num"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 3,
-        "x": 430,
-        "y": 220,
-        "wires": [
-            [
-                "28acb72660eb7c09"
-            ],
-            [
-                "3311f8bf70a7177f"
-            ],
-            [
-                "3311f8bf70a7177f"
-            ]
-        ]
-    },
-    {
-        "id": "446125f224764379",
-        "type": "ui_button",
-        "z": "51979bdd7fc2c3b7",
-        "name": "",
-        "group": "ea31a6383d9ae204",
-        "order": 2,
-        "width": 3,
-        "height": 1,
-        "passthru": false,
-        "label": "Logout",
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "",
-        "payload": "",
-        "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
-        "x": 210,
-        "y": 400,
-        "wires": [
-            [
-                "98e334d10cba02e8"
-            ]
-        ]
-    },
-    {
-        "id": "98e334d10cba02e8",
-        "type": "function",
-        "z": "51979bdd7fc2c3b7",
-        "name": "Logout function",
-        "func": "flow.set(\"token\", null)\nflow.set(\"rentalId\", null)\n\nmsg.payload = {\n    \"group\":{\n        \"show\":[\n            \"Micromobilidade_Login\"\n        ],\n        \"hide\":[\n            \"Micromobilidade_Rentals\",\n            \"Micromobilidade_RentalDetails\"\n        ]\n    }\n}\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 430,
-        "y": 400,
-        "wires": [
-            [
-                "8d71b3d12830594c"
-            ]
-        ]
-    },
-    {
-        "id": "fd5aa7c7f53e8d46",
-        "type": "change",
-        "z": "51979bdd7fc2c3b7",
-        "name": "Set vehicles list",
-        "rules": [
-            {
-                "t": "set",
-                "p": "options",
-                "pt": "msg",
-                "to": "payload",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 720,
-        "y": 700,
-        "wires": [
-            [
-                "078dca1e7d723e62"
-            ]
-        ]
-    },
-    {
-        "id": "047e2004315a9d54",
-        "type": "http request",
-        "z": "51979bdd7fc2c3b7",
-        "name": "Get vehicles",
-        "method": "GET",
-        "ret": "obj",
-        "paytoqs": "ignore",
-        "url": "localhost:5002/vehicles",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "authType": "",
-        "x": 230,
-        "y": 700,
-        "wires": [
-            [
-                "c065970d41bb737f",
-                "1c666e882bf88196"
-            ]
-        ]
-    },
-    {
-        "id": "c065970d41bb737f",
-        "type": "debug",
-        "z": "51979bdd7fc2c3b7",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 730,
-        "y": 600,
-        "wires": []
-    },
-    {
-        "id": "1c666e882bf88196",
-        "type": "function",
-        "z": "51979bdd7fc2c3b7",
-        "name": "Set-up vehicles list",
-        "func": "msg.payload = msg.payload.map(vehicle => {\n    const { price } = vehicle.vehicle_type;\n    const priceLabel = `${price.value}€/${price.period}`;\n    const label = vehicle.registration + \" (\" + priceLabel + \")\";\n    const value = vehicle._id;\n    \n    return {[label] : value};\n})\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 470,
-        "y": 700,
-        "wires": [
-            [
-                "fd5aa7c7f53e8d46"
-            ]
-        ]
-    },
-    {
-        "id": "5453fb00f47c8032",
-        "type": "ui_button",
-        "z": "51979bdd7fc2c3b7",
-        "name": "",
-        "group": "ea31a6383d9ae204",
-        "order": 6,
-        "width": 0,
-        "height": 0,
-        "passthru": false,
-        "label": "Start rental",
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "",
-        "payload": "",
-        "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
-        "x": 230,
-        "y": 860,
-        "wires": [
-            [
-                "d05b69d9b880191e"
-            ]
-        ]
-    },
-    {
-        "id": "d05b69d9b880191e",
-        "type": "function",
-        "z": "51979bdd7fc2c3b7",
-        "name": "Start rental",
-        "func": "const token = flow.get(\"token\")\nconst selectedVehicle = flow.get(\"selectedVehicle\")\n\nif(token) {\n    if(selectedVehicle) {\n        // Send request\n        msg.payload = {\n            result: 1,\n            vehicle: selectedVehicle\n        };\n    } else {\n        // No vehicle selected\n        msg.payload = {\n            result: 2,\n            rentalMessage: \"Please select a vehicle\"\n        };\n    }\n} else {\n    // Send to login\n    msg.payload = {\n        result: 3\n    };\n}\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 410,
-        "y": 860,
-        "wires": [
-            [
-                "d276575206a3e273",
-                "bd269dc8fefee769"
-            ]
-        ]
-    },
-    {
-        "id": "d336b97ad35f27b0",
-        "type": "http request",
-        "z": "51979bdd7fc2c3b7",
-        "name": "Start rental request",
-        "method": "POST",
-        "ret": "obj",
-        "paytoqs": "ignore",
-        "url": "localhost:5003/start",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "authType": "",
-        "x": 930,
-        "y": 800,
-        "wires": [
-            [
-                "6e0c3ad996ddc19a"
-            ]
-        ]
-    },
-    {
-        "id": "f2d58d65d9cc4072",
-        "type": "change",
-        "z": "51979bdd7fc2c3b7",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "selectedVehicle",
-                "pt": "flow",
-                "to": "payload",
-                "tot": "msg"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 1170,
-        "y": 700,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "d276575206a3e273",
-        "type": "debug",
-        "z": "51979bdd7fc2c3b7",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 490,
-        "y": 1020,
-        "wires": []
-    },
-    {
-        "id": "c668357a56ae07ae",
-        "type": "comment",
-        "z": "51979bdd7fc2c3b7",
-        "name": "Obter os veículos disponíveis e popular a dropdown",
-        "info": "",
-        "x": 350,
-        "y": 480,
-        "wires": []
-    },
-    {
-        "id": "1b9f8404775a6098",
-        "type": "comment",
-        "z": "51979bdd7fc2c3b7",
-        "name": "Iniciar o aluguer",
-        "info": "",
-        "x": 240,
-        "y": 800,
-        "wires": []
-    },
-    {
-        "id": "6e0c3ad996ddc19a",
-        "type": "function",
-        "z": "51979bdd7fc2c3b7",
-        "name": "Rental response",
-        "func": "console.log(msg)\n\nif(msg.statusCode == 201) {\n    flow.set(\"rentalId\", msg.payload._id)\n    msg.payload.result = 1;\n} else {\n    msg.payload.result = 2;\n}\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 1200,
-        "y": 800,
-        "wires": [
-            [
-                "3544d1a9658b231f"
-            ]
-        ]
-    },
-    {
-        "id": "2e1c4428d4cb79ed",
-        "type": "ui_ui_control",
-        "z": "51979bdd7fc2c3b7",
-        "name": "",
-        "events": "all",
-        "x": 1300,
-        "y": 160,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "28acb72660eb7c09",
-        "type": "function",
-        "z": "51979bdd7fc2c3b7",
-        "name": "Login success",
-        "func": "// Check if the user has any rental in progress\nconst token = flow.get(\"token\")\n\nconsole.log(token)\n\nmsg.headers = {\n    \"Authorization\": \"Bearer \" + token\n}\n\nmsg.payload.loginMessage = \"\";\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 640,
-        "y": 200,
-        "wires": [
-            [
-                "82a089939c9e9cb4",
-                "c63c70de568667f0",
-                "8fe7b9a99b6e1731"
-            ]
-        ]
-    },
-    {
-        "id": "a4fc0cb43185a7e4",
-        "type": "comment",
-        "z": "51979bdd7fc2c3b7",
-        "name": "Login",
-        "info": "",
-        "x": 210,
-        "y": 40,
-        "wires": []
-    },
-    {
-        "id": "8d71b3d12830594c",
-        "type": "ui_ui_control",
-        "z": "51979bdd7fc2c3b7",
-        "name": "",
-        "events": "all",
-        "x": 640,
-        "y": 400,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "82a089939c9e9cb4",
-        "type": "ui_text",
-        "z": "51979bdd7fc2c3b7",
-        "group": "1899c06189b50083",
-        "order": 2,
-        "width": 0,
-        "height": 0,
-        "name": "Login message",
-        "label": "",
-        "format": "{{msg.payload.loginMessage}}",
-        "layout": "row-left",
-        "className": "",
-        "x": 840,
-        "y": 260,
-        "wires": []
-    },
-    {
-        "id": "3311f8bf70a7177f",
-        "type": "function",
-        "z": "51979bdd7fc2c3b7",
-        "name": "Login error",
-        "func": "msg.payload.loginMessage = msg.payload.error;\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 630,
-        "y": 260,
-        "wires": [
-            [
-                "82a089939c9e9cb4"
-            ]
-        ]
-    },
-    {
-        "id": "c06f235d54bd4a05",
-        "type": "ui_text",
-        "z": "51979bdd7fc2c3b7",
-        "group": "ea31a6383d9ae204",
-        "order": 7,
-        "width": 0,
-        "height": 0,
-        "name": "Rental message",
-        "label": "",
-        "format": "{{msg.payload.rentalMessage}}",
-        "layout": "row-left",
-        "className": "",
-        "x": 940,
-        "y": 1020,
-        "wires": []
-    },
-    {
-        "id": "bd269dc8fefee769",
-        "type": "switch",
-        "z": "51979bdd7fc2c3b7",
-        "name": "",
-        "property": "payload.result",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "eq",
-                "v": "1",
-                "vt": "num"
-            },
-            {
-                "t": "eq",
-                "v": "2",
-                "vt": "num"
-            },
-            {
-                "t": "eq",
-                "v": "3",
-                "vt": "num"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 3,
-        "x": 590,
-        "y": 860,
-        "wires": [
-            [
-                "78c89deea13f22cb"
-            ],
-            [
-                "c06f235d54bd4a05"
-            ],
-            [
-                "98e334d10cba02e8"
-            ]
-        ]
-    },
-    {
-        "id": "e31d470e20fb2c67",
-        "type": "inject",
-        "z": "51979bdd7fc2c3b7",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "1",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payloadType": "date",
-        "x": 230,
-        "y": 1180,
-        "wires": [
-            [
-                "1a800505a4b535dd"
-            ]
-        ]
-    },
-    {
-        "id": "b273395842e5aa75",
-        "type": "ui_button",
-        "z": "51979bdd7fc2c3b7",
-        "name": "",
-        "group": "ea31a6383d9ae204",
-        "order": 4,
-        "width": 0,
-        "height": 0,
-        "passthru": false,
-        "label": "Refresh vehicles",
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "",
-        "payload": "",
-        "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
-        "x": 250,
-        "y": 540,
-        "wires": [
-            [
-                "c63c70de568667f0"
-            ]
-        ]
-    },
-    {
-        "id": "c63c70de568667f0",
-        "type": "function",
-        "z": "51979bdd7fc2c3b7",
-        "name": "Reset vehicles",
-        "func": "flow.set(\"selectedVehicle\", null);\n\nmsg.payload.rentalMessage = \"\";\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 260,
-        "y": 620,
-        "wires": [
-            [
-                "047e2004315a9d54",
-                "c06f235d54bd4a05"
-            ]
-        ]
-    },
-    {
-        "id": "78c89deea13f22cb",
-        "type": "function",
-        "z": "51979bdd7fc2c3b7",
-        "name": "",
-        "func": "const token = flow.get(\"token\")\n\nconsole.log(msg.payload)\n\nmsg.headers = {\n    \"Authorization\": \"Bearer \" + token\n}\n\nmsg.payload = {\n    \"vehicle_id\": msg.payload.vehicle\n}\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 740,
-        "y": 800,
-        "wires": [
-            [
-                "d336b97ad35f27b0"
-            ]
-        ]
-    },
-    {
-        "id": "deb582224f55083b",
-        "type": "ui_ui_control",
-        "z": "51979bdd7fc2c3b7",
-        "name": "",
-        "events": "all",
-        "x": 1340,
-        "y": 880,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "3544d1a9658b231f",
-        "type": "switch",
-        "z": "51979bdd7fc2c3b7",
-        "name": "",
-        "property": "payload.result",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "eq",
-                "v": "1",
-                "vt": "num"
-            },
-            {
-                "t": "eq",
-                "v": "2",
-                "vt": "num"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 2,
-        "x": 910,
-        "y": 880,
-        "wires": [
-            [
-                "5749c6875363701a"
-            ],
-            [
-                "aece0182b452cb06"
-            ]
-        ]
-    },
-    {
-        "id": "5749c6875363701a",
-        "type": "function",
-        "z": "51979bdd7fc2c3b7",
-        "name": "Start rental success",
-        "func": "msg.payload = {\n    \"group\":{\n        \"show\":[\n            \"Micromobilidade_RentalDetails\"\n        ],\n        \"hide\":[\n            \"Micromobilidade_Login\",\n            \"Micromobilidade_Rentals\"\n        ]\n    }\n}\n\nmsg.payload.loginMessage = \"\";\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 1110,
-        "y": 880,
-        "wires": [
-            [
-                "deb582224f55083b"
-            ]
-        ]
-    },
-    {
-        "id": "aece0182b452cb06",
-        "type": "function",
-        "z": "51979bdd7fc2c3b7",
-        "name": "Start rental error",
-        "func": "console.log(\"Rental error\")\nconsole.log(msg.payload)\nmsg.payload.rentalMessage = msg.payload.message;\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 1100,
-        "y": 940,
-        "wires": [
-            [
-                "c06f235d54bd4a05"
-            ]
-        ]
-    },
-    {
-        "id": "ddc003d72e6a29be",
-        "type": "http request",
-        "z": "51979bdd7fc2c3b7",
-        "name": "Check rental status",
-        "method": "GET",
-        "ret": "obj",
-        "paytoqs": "ignore",
-        "url": "",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "authType": "",
-        "x": 650,
-        "y": 1300,
-        "wires": [
-            [
-                "041e3a3d86ea2249"
-            ]
-        ]
-    },
-    {
-        "id": "2e99f6c02b648e95",
-        "type": "function",
-        "z": "51979bdd7fc2c3b7",
-        "name": "URL",
-        "func": "const token = flow.get(\"token\")\nconst rentalId = flow.get(\"rentalId\")\n\nmsg.url = `localhost:5003/${rentalId}/check`;\nmsg.headers = {\n    \"api-key\": \"XrGixtAxLANSJ93oEDFY3WgSUjyLMPJM\"\n}\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 450,
-        "y": 1300,
-        "wires": [
-            [
-                "ddc003d72e6a29be"
-            ]
-        ]
-    },
-    {
-        "id": "041e3a3d86ea2249",
-        "type": "function",
-        "z": "51979bdd7fc2c3b7",
-        "name": "Rental details response",
-        "func": "console.log(msg)\n\nif(msg.statusCode == 200) {\n    msg.payload.result = 1;\n} else {\n    msg.payload.result = 2;\n}\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 910,
-        "y": 1300,
-        "wires": [
-            [
-                "e2382c28fd1cd47e"
-            ]
-        ]
-    },
-    {
-        "id": "e2382c28fd1cd47e",
-        "type": "switch",
-        "z": "51979bdd7fc2c3b7",
-        "name": "",
-        "property": "payload.result",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "eq",
-                "v": "1",
-                "vt": "num"
-            },
-            {
-                "t": "eq",
-                "v": "2",
-                "vt": "num"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 2,
-        "x": 1130,
-        "y": 1300,
-        "wires": [
-            [
-                "d38d8517a8692288"
-            ],
-            [
-                "386ef5ccba70d7bb"
-            ]
-        ]
-    },
-    {
-        "id": "386ef5ccba70d7bb",
-        "type": "function",
-        "z": "51979bdd7fc2c3b7",
-        "name": "Rental details error",
-        "func": "msg.payload = {\n    \"group\":{\n        \"show\":[\n            \"Micromobilidade_Rentals\"\n        ],\n        \"hide\":[\n            \"Micromobilidade_Login\",\n            \"Micromobilidade_RentalDetails\"\n        ]\n    }\n}\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 1350,
-        "y": 1300,
-        "wires": [
-            [
-                "de512011a92f8bbb"
-            ]
-        ]
-    },
-    {
-        "id": "1a800505a4b535dd",
-        "type": "function",
-        "z": "51979bdd7fc2c3b7",
-        "name": "",
-        "func": "const rentalId = flow.get(\"rentalId\")\n\nif(rentalId) {\n    msg.payload = {\n        result: 1\n    };\n} else {\n    msg.payload = {\n        result: 2\n    };\n}\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 260,
-        "y": 1240,
-        "wires": [
-            [
-                "025b69a576ca41c8"
-            ]
-        ]
-    },
-    {
-        "id": "025b69a576ca41c8",
-        "type": "switch",
-        "z": "51979bdd7fc2c3b7",
-        "name": "",
-        "property": "payload.result",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "eq",
-                "v": "1",
-                "vt": "num"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 1,
-        "x": 290,
-        "y": 1300,
-        "wires": [
-            [
-                "2e99f6c02b648e95"
-            ]
-        ]
-    },
-    {
-        "id": "f69a3859b441974b",
-        "type": "comment",
-        "z": "51979bdd7fc2c3b7",
-        "name": "Estado do aluguer",
-        "info": "",
-        "x": 250,
-        "y": 1060,
-        "wires": []
-    },
-    {
-        "id": "8fe7b9a99b6e1731",
-        "type": "http request",
-        "z": "51979bdd7fc2c3b7",
-        "name": "Check current rental",
-        "method": "GET",
-        "ret": "obj",
-        "paytoqs": "ignore",
-        "url": "localhost:5003/active-rental",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "authType": "",
-        "x": 840,
-        "y": 100,
-        "wires": [
-            [
-                "891b86f435e6a90f"
-            ]
-        ]
-    },
-    {
-        "id": "891b86f435e6a90f",
-        "type": "function",
-        "z": "51979bdd7fc2c3b7",
-        "name": "",
-        "func": "console.log(msg)\n\n// Possui um rental ativo -> Enviar para página de detalhes\nif(msg.statusCode == 200) {\n    flow.set(\"rentalId\", msg.payload._id)\n    msg.payload.result = 1;\n// Não possui um rental ativo -> Enviar para lista de veículos\n} else {\n    console.log(\"Lista de veículos\")\n    msg.payload.result = 2;\n}\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 840,
-        "y": 160,
-        "wires": [
-            [
-                "cf9e9b048d02fc77"
-            ]
-        ]
-    },
-    {
-        "id": "cf9e9b048d02fc77",
-        "type": "switch",
-        "z": "51979bdd7fc2c3b7",
-        "name": "",
-        "property": "payload.result",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "eq",
-                "v": "1",
-                "vt": "num"
-            },
-            {
-                "t": "eq",
-                "v": "2",
-                "vt": "num"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 2,
-        "x": 990,
-        "y": 160,
-        "wires": [
-            [
-                "abfb24b2cdb3dc3e"
-            ],
-            [
-                "3cd709d6727f6f0e"
-            ]
-        ]
-    },
-    {
-        "id": "abfb24b2cdb3dc3e",
-        "type": "function",
-        "z": "51979bdd7fc2c3b7",
-        "name": "",
-        "func": "msg.payload = {\n    group: {\n        show: [\n            \"Micromobilidade_RentalDetails\"\n        ],\n        hide: [\n            \"Micromobilidade_Login\",\n            \"Micromobilidade_Rentals\"\n        ]\n    }\n};\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 1140,
-        "y": 120,
-        "wires": [
-            [
-                "2e1c4428d4cb79ed",
-                "82afb8501524923c"
-            ]
-        ]
-    },
-    {
-        "id": "3cd709d6727f6f0e",
-        "type": "function",
-        "z": "51979bdd7fc2c3b7",
-        "name": "",
-        "func": "console.log(\"Go to rentals\")\nmsg.payload = {\n    \"group\":{\n        \"show\":[\n            \"Micromobilidade_Rentals\"\n        ],\n        \"hide\":[\n            \"Micromobilidade_Login\",\n            \"Micromobilidade_RentalDetails\"\n        ]\n    }\n};\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 1140,
-        "y": 200,
-        "wires": [
-            [
-                "2e1c4428d4cb79ed"
-            ]
-        ]
-    },
-    {
-        "id": "13c31d01caed7c34",
-        "type": "ui_button",
-        "z": "51979bdd7fc2c3b7",
-        "name": "",
-        "group": "bbba208ed9823912",
-        "order": 1,
-        "width": 3,
-        "height": 1,
-        "passthru": false,
-        "label": "Logout",
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "",
-        "payload": "",
-        "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
-        "x": 210,
-        "y": 1120,
-        "wires": [
-            [
-                "98e334d10cba02e8"
-            ]
-        ]
-    },
-    {
-        "id": "cf12cb73d8d6663a",
-        "type": "ui_text",
-        "z": "51979bdd7fc2c3b7",
-        "group": "bbba208ed9823912",
-        "order": 3,
-        "width": 0,
-        "height": 0,
-        "name": "Start time",
-        "label": "Start time:",
-        "format": "{{msg.payload.rentalInfo.startTime}}",
-        "layout": "row-left",
-        "className": "",
-        "x": 1180,
-        "y": 1380,
-        "wires": []
-    },
-    {
-        "id": "85f1a1fb6b0bbacf",
-        "type": "ui_text",
-        "z": "51979bdd7fc2c3b7",
-        "group": "bbba208ed9823912",
-        "order": 4,
-        "width": 0,
-        "height": 0,
-        "name": "Duration",
-        "label": "Duration:",
-        "format": "{{msg.payload.rentalInfo.duration}}",
-        "layout": "row-left",
-        "className": "",
-        "x": 1180,
-        "y": 1440,
-        "wires": []
-    },
-    {
-        "id": "2ef30de7ed5aa6d6",
-        "type": "ui_text",
-        "z": "51979bdd7fc2c3b7",
-        "group": "bbba208ed9823912",
-        "order": 5,
-        "width": 0,
-        "height": 0,
-        "name": "Periods paid",
-        "label": "Periods paid:",
-        "format": "{{msg.payload.rentalInfo.periodsPaid}}",
-        "layout": "row-left",
-        "className": "",
-        "x": 1190,
-        "y": 1500,
-        "wires": []
-    },
-    {
-        "id": "d38d8517a8692288",
-        "type": "function",
-        "z": "51979bdd7fc2c3b7",
-        "name": "Rental details success",
-        "func": "const { code } = msg.payload;\n\nconsole.log(code)\n\nmsg.payload.rentalInfo = {\n    startTime: msg.payload.start_rental_date,\n    periodsPaid: msg.payload.periods_paid,\n}\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 260,
-        "y": 1380,
-        "wires": [
-            [
-                "af47acca3a2ea303"
-            ]
-        ]
-    },
-    {
-        "id": "82afb8501524923c",
-        "type": "function",
-        "z": "51979bdd7fc2c3b7",
-        "name": "",
-        "func": "const now = new Date().getTime();\nconst start = new Date(msg.payload.start_rental_date).getTime();\nconst duration = parseInt((now - start) / 1000);\n\nconst minutes = Math.floor(duration / 60);\nconst seconds = duration - minutes * 60;\n\nmsg.payload.rentalInfo = {\n    startTime: msg.payload.start_rental_date,\n    periodsPaid: msg.payload.periods_paid,\n    duration: minutes.toString().padStart(2, '0') + \":\" + seconds.toString().padStart(2, '0'),\n    info: msg.payload.rental_info\n}\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 980,
-        "y": 1460,
-        "wires": [
-            [
-                "cf12cb73d8d6663a",
-                "85f1a1fb6b0bbacf",
-                "2ef30de7ed5aa6d6",
-                "9756c2a9f26fc917"
-            ]
-        ]
-    },
-    {
-        "id": "de512011a92f8bbb",
-        "type": "ui_ui_control",
-        "z": "51979bdd7fc2c3b7",
-        "name": "",
-        "events": "all",
-        "x": 1560,
-        "y": 1300,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "af47acca3a2ea303",
-        "type": "switch",
-        "z": "51979bdd7fc2c3b7",
-        "name": "",
-        "property": "payload.code",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "eq",
-                "v": "in_progress",
-                "vt": "str"
-            },
-            {
-                "t": "eq",
-                "v": "ending",
-                "vt": "str"
-            },
-            {
-                "t": "eq",
-                "v": "no_balance",
-                "vt": "str"
-            },
-            {
-                "t": "eq",
-                "v": "completed",
-                "vt": "str"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 4,
-        "x": 470,
-        "y": 1460,
-        "wires": [
-            [
-                "10f04d4a57a2e04d"
-            ],
-            [
-                "fa7542444493855e"
-            ],
-            [
-                "5afd3b8ff8adea0f"
-            ],
-            [
-                "7f44fd15760c931c"
-            ]
-        ]
-    },
-    {
-        "id": "9756c2a9f26fc917",
-        "type": "ui_text",
-        "z": "51979bdd7fc2c3b7",
-        "group": "bbba208ed9823912",
-        "order": 6,
-        "width": 0,
-        "height": 0,
-        "name": "Info",
-        "label": "",
-        "format": "{{msg.payload.rentalInfo.info}}",
-        "layout": "row-left",
-        "className": "",
-        "x": 1170,
-        "y": 1560,
-        "wires": []
-    },
-    {
-        "id": "fa7542444493855e",
-        "type": "function",
-        "z": "51979bdd7fc2c3b7",
-        "name": "",
-        "func": "msg.payload.rental_info = `A terminar dentro de ${parseInt(msg.payload.time_left).toString().padStart(2, '0')} segundos `\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 660,
-        "y": 1420,
-        "wires": [
-            [
-                "82afb8501524923c"
-            ]
-        ]
-    },
-    {
-        "id": "10f04d4a57a2e04d",
-        "type": "function",
-        "z": "51979bdd7fc2c3b7",
-        "name": "",
-        "func": "msg.payload.rental_info = \"Em andamento\";\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 660,
-        "y": 1360,
-        "wires": [
-            [
-                "82afb8501524923c"
-            ]
-        ]
-    },
-    {
-        "id": "5afd3b8ff8adea0f",
-        "type": "function",
-        "z": "51979bdd7fc2c3b7",
-        "name": "",
-        "func": "msg.payload.rental_info = \"Não possui saldo para continuar o aluguer. Vai terminar dentro de 1 minuto\";\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 660,
-        "y": 1480,
-        "wires": [
-            [
-                "82afb8501524923c"
-            ]
-        ]
-    },
-    {
-        "id": "7f44fd15760c931c",
-        "type": "function",
-        "z": "51979bdd7fc2c3b7",
-        "name": "",
-        "func": "msg.payload.rental_info = \"Aluguer terminado\";\nconst rentalId = flow.set(\"rentalId\", null)\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 660,
-        "y": 1540,
-        "wires": [
-            [
-                "82afb8501524923c"
-            ]
-        ]
-    },
-    {
-        "id": "0c66eddfeb46353f",
-        "type": "ui_button",
-        "z": "51979bdd7fc2c3b7",
-        "name": "",
-        "group": "bbba208ed9823912",
-        "order": 7,
-        "width": 0,
-        "height": 0,
-        "passthru": false,
-        "label": "Stop rental",
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "",
-        "className": "",
-        "icon": "",
-        "payload": "",
-        "payloadType": "str",
-        "topic": "topic",
-        "topicType": "msg",
-        "x": 230,
-        "y": 1620,
-        "wires": [
-            [
-                "709b17e35526f9a2"
-            ]
-        ]
-    },
-    {
-        "id": "2e0533c8c4e80588",
-        "type": "http request",
-        "z": "51979bdd7fc2c3b7",
-        "name": "Start rental request",
-        "method": "POST",
-        "ret": "obj",
-        "paytoqs": "ignore",
-        "url": "",
-        "tls": "",
-        "persist": false,
-        "proxy": "",
-        "authType": "",
-        "x": 750,
-        "y": 1620,
-        "wires": [
-            [
-                "036a4c073489c7ae"
-            ]
-        ]
-    },
-    {
-        "id": "709b17e35526f9a2",
-        "type": "function",
-        "z": "51979bdd7fc2c3b7",
-        "name": "URL",
-        "func": "const token = flow.get(\"token\")\nconst rentalId = flow.get(\"rentalId\")\n\nif(rentalId) {\n    msg.url = `localhost:5003/${rentalId}/stop`;\n    msg.headers = {\n        \"Authorization\": `Bearer ${token}`\n    }\n    msg.payload = {\n        result: 1\n    }\n} else {\n    console.log(\"Teste 1\")\n    msg.payload = {\n        result: 2\n    }\n}\n\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 390,
-        "y": 1620,
-        "wires": [
-            [
-                "a4e1bd29515f588c"
-            ]
-        ]
-    },
-    {
-        "id": "036a4c073489c7ae",
-        "type": "function",
-        "z": "51979bdd7fc2c3b7",
-        "name": "",
-        "func": "console.log(msg)\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 960,
-        "y": 1620,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "a4e1bd29515f588c",
-        "type": "switch",
-        "z": "51979bdd7fc2c3b7",
-        "name": "",
-        "property": "payload.result",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "eq",
-                "v": "1",
-                "vt": "num"
-            },
-            {
-                "t": "eq",
-                "v": "2",
-                "vt": "str"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 2,
-        "x": 530,
-        "y": 1620,
-        "wires": [
-            [
-                "2e0533c8c4e80588"
-            ],
-            [
-                "386ef5ccba70d7bb"
-            ]
-        ]
-    },
-    {
-        "id": "ccc29297cc0441b3",
-        "type": "ui_spacer",
-        "z": "51979bdd7fc2c3b7",
-        "name": "spacer",
-        "group": "ea31a6383d9ae204",
-        "order": 1,
-        "width": 3,
-        "height": 1
-    },
-    {
-        "id": "46fcd7dcf09618be",
-        "type": "ui_spacer",
-        "z": "51979bdd7fc2c3b7",
-        "name": "spacer",
-        "group": "ea31a6383d9ae204",
-        "order": 3,
-        "width": 6,
-        "height": 1
-    },
-    {
-        "id": "48a67449545175da",
-        "type": "ui_spacer",
-        "z": "51979bdd7fc2c3b7",
-        "name": "spacer",
-        "group": "bbba208ed9823912",
-        "order": 2,
-        "width": 3,
-        "height": 1
-    },
-    {
-        "id": "1899c06189b50083",
-        "type": "ui_group",
-        "name": "Login",
-        "tab": "7efa1f22d6e3e8f8",
-        "order": 2,
-        "disp": true,
-        "width": "6",
-        "collapse": false,
-        "className": ""
-    },
-    {
-        "id": "ea31a6383d9ae204",
-        "type": "ui_group",
-        "name": "Rentals",
-        "tab": "7efa1f22d6e3e8f8",
-        "order": 3,
-        "disp": true,
-        "width": "6",
-        "collapse": false,
-        "className": ""
-    },
-    {
-        "id": "bbba208ed9823912",
-        "type": "ui_group",
-        "name": "RentalDetails",
-        "tab": "7efa1f22d6e3e8f8",
-        "order": 3,
-        "disp": true,
-        "width": "6",
-        "collapse": false,
-        "className": ""
-    },
-    {
-        "id": "7efa1f22d6e3e8f8",
-        "type": "ui_tab",
-        "name": "Micromobilidade",
-        "icon": "dashboard",
-        "order": 3,
-        "disabled": false,
-        "hidden": false
-    }
+  {
+    "id": "51979bdd7fc2c3b7",
+    "type": "tab",
+    "label": "Micromobilidade elétrica",
+    "disabled": false,
+    "info": ""
+  },
+  {
+    "id": "f0fc1f87bfd61d79",
+    "type": "ui_form",
+    "z": "51979bdd7fc2c3b7",
+    "name": "",
+    "label": "Login",
+    "group": "1899c06189b50083",
+    "order": 1,
+    "width": 0,
+    "height": 0,
+    "options": [
+      {
+        "label": "E-mail",
+        "value": "email",
+        "type": "text",
+        "required": true,
+        "rows": null
+      },
+      {
+        "label": "Password",
+        "value": "password",
+        "type": "password",
+        "required": true,
+        "rows": null
+      }
+    ],
+    "formValue": {
+      "email": "",
+      "password": ""
+    },
+    "payload": "",
+    "submit": "Login",
+    "cancel": "cancel",
+    "topic": "topic",
+    "topicType": "msg",
+    "splitLayout": "",
+    "className": "",
+    "x": 210,
+    "y": 100,
+    "wires": [["1c8f1ecd1d91c43e"]]
+  },
+  {
+    "id": "1c8f1ecd1d91c43e",
+    "type": "http request",
+    "z": "51979bdd7fc2c3b7",
+    "name": "Login request",
+    "method": "POST",
+    "ret": "obj",
+    "paytoqs": "ignore",
+    "url": "localhost:5001/users/login",
+    "tls": "",
+    "persist": false,
+    "proxy": "",
+    "authType": "",
+    "x": 500,
+    "y": 100,
+    "wires": [["35f637014958a928"]]
+  },
+  {
+    "id": "35f637014958a928",
+    "type": "function",
+    "z": "51979bdd7fc2c3b7",
+    "name": "Login verification",
+    "func": "console.log(msg)\n\nif(msg.statusCode == 200) {\n    msg.payload.result = 1;\n    flow.set(\"token\", msg.payload.token)\n} else if(msg.statusCode == 403) {\n    msg.payload.result = 2;\n} else {\n    msg.payload.result = 3\n}\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 250,
+    "y": 220,
+    "wires": [["5358c9f25d8b11ff"]]
+  },
+  {
+    "id": "078dca1e7d723e62",
+    "type": "ui_dropdown",
+    "z": "51979bdd7fc2c3b7",
+    "name": "",
+    "label": "Vehicles list",
+    "tooltip": "",
+    "place": "Select option",
+    "group": "ea31a6383d9ae204",
+    "order": 5,
+    "width": 0,
+    "height": 0,
+    "passthru": true,
+    "multiple": false,
+    "options": [],
+    "payload": "",
+    "topic": "selectedVehicle",
+    "topicType": "flow",
+    "className": "",
+    "x": 930,
+    "y": 700,
+    "wires": [["f2d58d65d9cc4072"]]
+  },
+  {
+    "id": "5358c9f25d8b11ff",
+    "type": "switch",
+    "z": "51979bdd7fc2c3b7",
+    "name": "",
+    "property": "payload.result",
+    "propertyType": "msg",
+    "rules": [
+      {
+        "t": "eq",
+        "v": "1",
+        "vt": "num"
+      },
+      {
+        "t": "eq",
+        "v": "2",
+        "vt": "num"
+      },
+      {
+        "t": "eq",
+        "v": "3",
+        "vt": "num"
+      }
+    ],
+    "checkall": "true",
+    "repair": false,
+    "outputs": 3,
+    "x": 430,
+    "y": 220,
+    "wires": [["28acb72660eb7c09"], ["3311f8bf70a7177f"], ["3311f8bf70a7177f"]]
+  },
+  {
+    "id": "446125f224764379",
+    "type": "ui_button",
+    "z": "51979bdd7fc2c3b7",
+    "name": "",
+    "group": "ea31a6383d9ae204",
+    "order": 2,
+    "width": 3,
+    "height": 1,
+    "passthru": false,
+    "label": "Logout",
+    "tooltip": "",
+    "color": "",
+    "bgcolor": "",
+    "className": "",
+    "icon": "",
+    "payload": "",
+    "payloadType": "str",
+    "topic": "topic",
+    "topicType": "msg",
+    "x": 210,
+    "y": 400,
+    "wires": [["98e334d10cba02e8"]]
+  },
+  {
+    "id": "98e334d10cba02e8",
+    "type": "function",
+    "z": "51979bdd7fc2c3b7",
+    "name": "Logout function",
+    "func": "flow.set(\"token\", null)\nflow.set(\"rentalId\", null)\n\nmsg.payload = {\n    \"group\":{\n        \"show\":[\n            \"Micromobilidade_Login\"\n        ],\n        \"hide\":[\n            \"Micromobilidade_Rentals\",\n            \"Micromobilidade_RentalDetails\"\n        ]\n    }\n}\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 430,
+    "y": 400,
+    "wires": [["8d71b3d12830594c"]]
+  },
+  {
+    "id": "fd5aa7c7f53e8d46",
+    "type": "change",
+    "z": "51979bdd7fc2c3b7",
+    "name": "Set vehicles list",
+    "rules": [
+      {
+        "t": "set",
+        "p": "options",
+        "pt": "msg",
+        "to": "payload",
+        "tot": "msg"
+      }
+    ],
+    "action": "",
+    "property": "",
+    "from": "",
+    "to": "",
+    "reg": false,
+    "x": 720,
+    "y": 700,
+    "wires": [["078dca1e7d723e62"]]
+  },
+  {
+    "id": "047e2004315a9d54",
+    "type": "http request",
+    "z": "51979bdd7fc2c3b7",
+    "name": "Get vehicles",
+    "method": "GET",
+    "ret": "obj",
+    "paytoqs": "ignore",
+    "url": "localhost:5002/vehicles",
+    "tls": "",
+    "persist": false,
+    "proxy": "",
+    "authType": "",
+    "x": 230,
+    "y": 700,
+    "wires": [["c065970d41bb737f", "1c666e882bf88196"]]
+  },
+  {
+    "id": "c065970d41bb737f",
+    "type": "debug",
+    "z": "51979bdd7fc2c3b7",
+    "name": "",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "false",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 730,
+    "y": 600,
+    "wires": []
+  },
+  {
+    "id": "1c666e882bf88196",
+    "type": "function",
+    "z": "51979bdd7fc2c3b7",
+    "name": "Set-up vehicles list",
+    "func": "msg.payload = msg.payload.map(vehicle => {\n    const { price } = vehicle.vehicle_type;\n    const priceLabel = `${price.value}€/${price.period}`;\n    const label = vehicle.registration + \" (\" + priceLabel + \")\";\n    const value = vehicle._id;\n    \n    return {[label] : value};\n})\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 470,
+    "y": 700,
+    "wires": [["fd5aa7c7f53e8d46"]]
+  },
+  {
+    "id": "5453fb00f47c8032",
+    "type": "ui_button",
+    "z": "51979bdd7fc2c3b7",
+    "name": "",
+    "group": "ea31a6383d9ae204",
+    "order": 6,
+    "width": 0,
+    "height": 0,
+    "passthru": false,
+    "label": "Start rental",
+    "tooltip": "",
+    "color": "",
+    "bgcolor": "",
+    "className": "",
+    "icon": "",
+    "payload": "",
+    "payloadType": "str",
+    "topic": "topic",
+    "topicType": "msg",
+    "x": 230,
+    "y": 860,
+    "wires": [["d05b69d9b880191e"]]
+  },
+  {
+    "id": "d05b69d9b880191e",
+    "type": "function",
+    "z": "51979bdd7fc2c3b7",
+    "name": "Start rental",
+    "func": "const token = flow.get(\"token\")\nconst selectedVehicle = flow.get(\"selectedVehicle\")\n\nif(token) {\n    if(selectedVehicle) {\n        // Send request\n        msg.payload = {\n            result: 1,\n            vehicle: selectedVehicle\n        };\n    } else {\n        // No vehicle selected\n        msg.payload = {\n            result: 2,\n            rentalMessage: \"Please select a vehicle\"\n        };\n    }\n} else {\n    // Send to login\n    msg.payload = {\n        result: 3\n    };\n}\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 410,
+    "y": 860,
+    "wires": [["d276575206a3e273", "bd269dc8fefee769"]]
+  },
+  {
+    "id": "d336b97ad35f27b0",
+    "type": "http request",
+    "z": "51979bdd7fc2c3b7",
+    "name": "Start rental request",
+    "method": "POST",
+    "ret": "obj",
+    "paytoqs": "ignore",
+    "url": "localhost:5003/start",
+    "tls": "",
+    "persist": false,
+    "proxy": "",
+    "authType": "",
+    "x": 930,
+    "y": 800,
+    "wires": [["6e0c3ad996ddc19a"]]
+  },
+  {
+    "id": "f2d58d65d9cc4072",
+    "type": "change",
+    "z": "51979bdd7fc2c3b7",
+    "name": "",
+    "rules": [
+      {
+        "t": "set",
+        "p": "selectedVehicle",
+        "pt": "flow",
+        "to": "payload",
+        "tot": "msg"
+      }
+    ],
+    "action": "",
+    "property": "",
+    "from": "",
+    "to": "",
+    "reg": false,
+    "x": 1170,
+    "y": 700,
+    "wires": [[]]
+  },
+  {
+    "id": "d276575206a3e273",
+    "type": "debug",
+    "z": "51979bdd7fc2c3b7",
+    "name": "",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": false,
+    "complete": "false",
+    "statusVal": "",
+    "statusType": "auto",
+    "x": 490,
+    "y": 1020,
+    "wires": []
+  },
+  {
+    "id": "c668357a56ae07ae",
+    "type": "comment",
+    "z": "51979bdd7fc2c3b7",
+    "name": "Obter os veículos disponíveis e popular a dropdown",
+    "info": "",
+    "x": 350,
+    "y": 480,
+    "wires": []
+  },
+  {
+    "id": "1b9f8404775a6098",
+    "type": "comment",
+    "z": "51979bdd7fc2c3b7",
+    "name": "Iniciar o aluguer",
+    "info": "",
+    "x": 240,
+    "y": 800,
+    "wires": []
+  },
+  {
+    "id": "6e0c3ad996ddc19a",
+    "type": "function",
+    "z": "51979bdd7fc2c3b7",
+    "name": "Rental response",
+    "func": "console.log(msg)\n\nif(msg.statusCode == 201) {\n    flow.set(\"rentalId\", msg.payload._id)\n    msg.payload.result = 1;\n} else {\n    msg.payload.result = 2;\n}\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 1200,
+    "y": 800,
+    "wires": [["3544d1a9658b231f"]]
+  },
+  {
+    "id": "2e1c4428d4cb79ed",
+    "type": "ui_ui_control",
+    "z": "51979bdd7fc2c3b7",
+    "name": "",
+    "events": "all",
+    "x": 1300,
+    "y": 160,
+    "wires": [[]]
+  },
+  {
+    "id": "28acb72660eb7c09",
+    "type": "function",
+    "z": "51979bdd7fc2c3b7",
+    "name": "Login success",
+    "func": "// Check if the user has any rental in progress\nconst token = flow.get(\"token\")\n\nconsole.log(token)\n\nmsg.headers = {\n    \"Authorization\": \"Bearer \" + token\n}\n\nmsg.payload.loginMessage = \"\";\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 640,
+    "y": 200,
+    "wires": [["82a089939c9e9cb4", "c63c70de568667f0", "8fe7b9a99b6e1731"]]
+  },
+  {
+    "id": "a4fc0cb43185a7e4",
+    "type": "comment",
+    "z": "51979bdd7fc2c3b7",
+    "name": "Login",
+    "info": "",
+    "x": 210,
+    "y": 40,
+    "wires": []
+  },
+  {
+    "id": "8d71b3d12830594c",
+    "type": "ui_ui_control",
+    "z": "51979bdd7fc2c3b7",
+    "name": "",
+    "events": "all",
+    "x": 640,
+    "y": 400,
+    "wires": [[]]
+  },
+  {
+    "id": "82a089939c9e9cb4",
+    "type": "ui_text",
+    "z": "51979bdd7fc2c3b7",
+    "group": "1899c06189b50083",
+    "order": 2,
+    "width": 0,
+    "height": 0,
+    "name": "Login message",
+    "label": "",
+    "format": "{{msg.payload.loginMessage}}",
+    "layout": "row-left",
+    "className": "",
+    "x": 840,
+    "y": 260,
+    "wires": []
+  },
+  {
+    "id": "3311f8bf70a7177f",
+    "type": "function",
+    "z": "51979bdd7fc2c3b7",
+    "name": "Login error",
+    "func": "msg.payload.loginMessage = msg.payload.error;\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 630,
+    "y": 260,
+    "wires": [["82a089939c9e9cb4"]]
+  },
+  {
+    "id": "c06f235d54bd4a05",
+    "type": "ui_text",
+    "z": "51979bdd7fc2c3b7",
+    "group": "ea31a6383d9ae204",
+    "order": 7,
+    "width": 0,
+    "height": 0,
+    "name": "Rental message",
+    "label": "",
+    "format": "{{msg.payload.rentalMessage}}",
+    "layout": "row-left",
+    "className": "",
+    "x": 940,
+    "y": 1020,
+    "wires": []
+  },
+  {
+    "id": "bd269dc8fefee769",
+    "type": "switch",
+    "z": "51979bdd7fc2c3b7",
+    "name": "",
+    "property": "payload.result",
+    "propertyType": "msg",
+    "rules": [
+      {
+        "t": "eq",
+        "v": "1",
+        "vt": "num"
+      },
+      {
+        "t": "eq",
+        "v": "2",
+        "vt": "num"
+      },
+      {
+        "t": "eq",
+        "v": "3",
+        "vt": "num"
+      }
+    ],
+    "checkall": "true",
+    "repair": false,
+    "outputs": 3,
+    "x": 590,
+    "y": 860,
+    "wires": [["78c89deea13f22cb"], ["c06f235d54bd4a05"], ["98e334d10cba02e8"]]
+  },
+  {
+    "id": "e31d470e20fb2c67",
+    "type": "inject",
+    "z": "51979bdd7fc2c3b7",
+    "name": "",
+    "props": [
+      {
+        "p": "payload"
+      },
+      {
+        "p": "topic",
+        "vt": "str"
+      }
+    ],
+    "repeat": "1",
+    "crontab": "",
+    "once": false,
+    "onceDelay": 0.1,
+    "topic": "",
+    "payloadType": "date",
+    "x": 230,
+    "y": 1180,
+    "wires": [["1a800505a4b535dd"]]
+  },
+  {
+    "id": "b273395842e5aa75",
+    "type": "ui_button",
+    "z": "51979bdd7fc2c3b7",
+    "name": "",
+    "group": "ea31a6383d9ae204",
+    "order": 4,
+    "width": 0,
+    "height": 0,
+    "passthru": false,
+    "label": "Refresh vehicles",
+    "tooltip": "",
+    "color": "",
+    "bgcolor": "",
+    "className": "",
+    "icon": "",
+    "payload": "",
+    "payloadType": "str",
+    "topic": "topic",
+    "topicType": "msg",
+    "x": 250,
+    "y": 540,
+    "wires": [["c63c70de568667f0"]]
+  },
+  {
+    "id": "c63c70de568667f0",
+    "type": "function",
+    "z": "51979bdd7fc2c3b7",
+    "name": "Reset vehicles",
+    "func": "flow.set(\"selectedVehicle\", null);\n\nmsg.payload.rentalMessage = \"\";\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 260,
+    "y": 620,
+    "wires": [["047e2004315a9d54", "c06f235d54bd4a05"]]
+  },
+  {
+    "id": "78c89deea13f22cb",
+    "type": "function",
+    "z": "51979bdd7fc2c3b7",
+    "name": "",
+    "func": "const token = flow.get(\"token\")\n\nconsole.log(msg.payload)\n\nmsg.headers = {\n    \"Authorization\": \"Bearer \" + token\n}\n\nmsg.payload = {\n    \"vehicle_id\": msg.payload.vehicle\n}\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 740,
+    "y": 800,
+    "wires": [["d336b97ad35f27b0"]]
+  },
+  {
+    "id": "deb582224f55083b",
+    "type": "ui_ui_control",
+    "z": "51979bdd7fc2c3b7",
+    "name": "",
+    "events": "all",
+    "x": 1340,
+    "y": 880,
+    "wires": [[]]
+  },
+  {
+    "id": "3544d1a9658b231f",
+    "type": "switch",
+    "z": "51979bdd7fc2c3b7",
+    "name": "",
+    "property": "payload.result",
+    "propertyType": "msg",
+    "rules": [
+      {
+        "t": "eq",
+        "v": "1",
+        "vt": "num"
+      },
+      {
+        "t": "eq",
+        "v": "2",
+        "vt": "num"
+      }
+    ],
+    "checkall": "true",
+    "repair": false,
+    "outputs": 2,
+    "x": 910,
+    "y": 880,
+    "wires": [["5749c6875363701a"], ["aece0182b452cb06"]]
+  },
+  {
+    "id": "5749c6875363701a",
+    "type": "function",
+    "z": "51979bdd7fc2c3b7",
+    "name": "Start rental success",
+    "func": "msg.payload = {\n    \"group\":{\n        \"show\":[\n            \"Micromobilidade_RentalDetails\"\n        ],\n        \"hide\":[\n            \"Micromobilidade_Login\",\n            \"Micromobilidade_Rentals\"\n        ]\n    }\n}\n\nmsg.payload.loginMessage = \"\";\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 1110,
+    "y": 880,
+    "wires": [["deb582224f55083b"]]
+  },
+  {
+    "id": "aece0182b452cb06",
+    "type": "function",
+    "z": "51979bdd7fc2c3b7",
+    "name": "Start rental error",
+    "func": "console.log(\"Rental error\")\nconsole.log(msg.payload)\nmsg.payload.rentalMessage = msg.payload.message;\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 1100,
+    "y": 940,
+    "wires": [["c06f235d54bd4a05"]]
+  },
+  {
+    "id": "ddc003d72e6a29be",
+    "type": "http request",
+    "z": "51979bdd7fc2c3b7",
+    "name": "Check rental status",
+    "method": "GET",
+    "ret": "obj",
+    "paytoqs": "ignore",
+    "url": "",
+    "tls": "",
+    "persist": false,
+    "proxy": "",
+    "authType": "",
+    "x": 650,
+    "y": 1300,
+    "wires": [["041e3a3d86ea2249"]]
+  },
+  {
+    "id": "2e99f6c02b648e95",
+    "type": "function",
+    "z": "51979bdd7fc2c3b7",
+    "name": "URL",
+    "func": "const token = flow.get(\"token\")\nconst rentalId = flow.get(\"rentalId\")\n\nmsg.url = `localhost:5003/${rentalId}/check`;\nmsg.headers = {\n    \"api-key\": \"XrGixtAxLANSJ93oEDFY3WgSUjyLMPJM\"\n}\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 450,
+    "y": 1300,
+    "wires": [["ddc003d72e6a29be"]]
+  },
+  {
+    "id": "041e3a3d86ea2249",
+    "type": "function",
+    "z": "51979bdd7fc2c3b7",
+    "name": "Rental details response",
+    "func": "if(msg.statusCode == 200) {\n    msg.payload.result = 1;\n} else {\n    msg.payload.result = 2;\n}\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 910,
+    "y": 1300,
+    "wires": [["e2382c28fd1cd47e"]]
+  },
+  {
+    "id": "e2382c28fd1cd47e",
+    "type": "switch",
+    "z": "51979bdd7fc2c3b7",
+    "name": "",
+    "property": "payload.result",
+    "propertyType": "msg",
+    "rules": [
+      {
+        "t": "eq",
+        "v": "1",
+        "vt": "num"
+      },
+      {
+        "t": "eq",
+        "v": "2",
+        "vt": "num"
+      }
+    ],
+    "checkall": "true",
+    "repair": false,
+    "outputs": 2,
+    "x": 1130,
+    "y": 1300,
+    "wires": [["d38d8517a8692288"], ["386ef5ccba70d7bb"]]
+  },
+  {
+    "id": "386ef5ccba70d7bb",
+    "type": "function",
+    "z": "51979bdd7fc2c3b7",
+    "name": "Rental details error",
+    "func": "msg.payload = {\n    \"group\":{\n        \"show\":[\n            \"Micromobilidade_Rentals\"\n        ],\n        \"hide\":[\n            \"Micromobilidade_Login\",\n            \"Micromobilidade_RentalDetails\"\n        ]\n    }\n}\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 1350,
+    "y": 1300,
+    "wires": [["de512011a92f8bbb"]]
+  },
+  {
+    "id": "1a800505a4b535dd",
+    "type": "function",
+    "z": "51979bdd7fc2c3b7",
+    "name": "",
+    "func": "const rentalId = flow.get(\"rentalId\")\n\nif(rentalId) {\n    msg.payload = {\n        result: 1\n    };\n} else {\n    msg.payload = {\n        result: 2\n    };\n}\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 260,
+    "y": 1240,
+    "wires": [["025b69a576ca41c8"]]
+  },
+  {
+    "id": "025b69a576ca41c8",
+    "type": "switch",
+    "z": "51979bdd7fc2c3b7",
+    "name": "",
+    "property": "payload.result",
+    "propertyType": "msg",
+    "rules": [
+      {
+        "t": "eq",
+        "v": "1",
+        "vt": "num"
+      }
+    ],
+    "checkall": "true",
+    "repair": false,
+    "outputs": 1,
+    "x": 290,
+    "y": 1300,
+    "wires": [["2e99f6c02b648e95"]]
+  },
+  {
+    "id": "f69a3859b441974b",
+    "type": "comment",
+    "z": "51979bdd7fc2c3b7",
+    "name": "Estado do aluguer",
+    "info": "",
+    "x": 250,
+    "y": 1060,
+    "wires": []
+  },
+  {
+    "id": "8fe7b9a99b6e1731",
+    "type": "http request",
+    "z": "51979bdd7fc2c3b7",
+    "name": "Check current rental",
+    "method": "GET",
+    "ret": "obj",
+    "paytoqs": "ignore",
+    "url": "localhost:5003/active-rental",
+    "tls": "",
+    "persist": false,
+    "proxy": "",
+    "authType": "",
+    "x": 840,
+    "y": 100,
+    "wires": [["891b86f435e6a90f"]]
+  },
+  {
+    "id": "891b86f435e6a90f",
+    "type": "function",
+    "z": "51979bdd7fc2c3b7",
+    "name": "",
+    "func": "console.log(msg)\n\n// Possui um rental ativo -> Enviar para página de detalhes\nif(msg.statusCode == 200) {\n    flow.set(\"rentalId\", msg.payload._id)\n    msg.payload.result = 1;\n// Não possui um rental ativo -> Enviar para lista de veículos\n} else {\n    console.log(\"Lista de veículos\")\n    msg.payload.result = 2;\n}\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 840,
+    "y": 160,
+    "wires": [["cf9e9b048d02fc77"]]
+  },
+  {
+    "id": "cf9e9b048d02fc77",
+    "type": "switch",
+    "z": "51979bdd7fc2c3b7",
+    "name": "",
+    "property": "payload.result",
+    "propertyType": "msg",
+    "rules": [
+      {
+        "t": "eq",
+        "v": "1",
+        "vt": "num"
+      },
+      {
+        "t": "eq",
+        "v": "2",
+        "vt": "num"
+      }
+    ],
+    "checkall": "true",
+    "repair": false,
+    "outputs": 2,
+    "x": 990,
+    "y": 160,
+    "wires": [["abfb24b2cdb3dc3e"], ["3cd709d6727f6f0e"]]
+  },
+  {
+    "id": "abfb24b2cdb3dc3e",
+    "type": "function",
+    "z": "51979bdd7fc2c3b7",
+    "name": "",
+    "func": "msg.payload = {\n    group: {\n        show: [\n            \"Micromobilidade_RentalDetails\"\n        ],\n        hide: [\n            \"Micromobilidade_Login\",\n            \"Micromobilidade_Rentals\"\n        ]\n    }\n};\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 1140,
+    "y": 120,
+    "wires": [["2e1c4428d4cb79ed", "82afb8501524923c"]]
+  },
+  {
+    "id": "3cd709d6727f6f0e",
+    "type": "function",
+    "z": "51979bdd7fc2c3b7",
+    "name": "",
+    "func": "console.log(\"Go to rentals\")\nmsg.payload = {\n    \"group\":{\n        \"show\":[\n            \"Micromobilidade_Rentals\"\n        ],\n        \"hide\":[\n            \"Micromobilidade_Login\",\n            \"Micromobilidade_RentalDetails\"\n        ]\n    }\n};\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 1140,
+    "y": 200,
+    "wires": [["2e1c4428d4cb79ed"]]
+  },
+  {
+    "id": "13c31d01caed7c34",
+    "type": "ui_button",
+    "z": "51979bdd7fc2c3b7",
+    "name": "",
+    "group": "bbba208ed9823912",
+    "order": 1,
+    "width": 3,
+    "height": 1,
+    "passthru": false,
+    "label": "Logout",
+    "tooltip": "",
+    "color": "",
+    "bgcolor": "",
+    "className": "",
+    "icon": "",
+    "payload": "",
+    "payloadType": "str",
+    "topic": "topic",
+    "topicType": "msg",
+    "x": 210,
+    "y": 1120,
+    "wires": [["98e334d10cba02e8"]]
+  },
+  {
+    "id": "cf12cb73d8d6663a",
+    "type": "ui_text",
+    "z": "51979bdd7fc2c3b7",
+    "group": "bbba208ed9823912",
+    "order": 3,
+    "width": 0,
+    "height": 0,
+    "name": "Start time",
+    "label": "Start time:",
+    "format": "{{msg.payload.rentalInfo.startTime}}",
+    "layout": "row-left",
+    "className": "",
+    "x": 1180,
+    "y": 1380,
+    "wires": []
+  },
+  {
+    "id": "85f1a1fb6b0bbacf",
+    "type": "ui_text",
+    "z": "51979bdd7fc2c3b7",
+    "group": "bbba208ed9823912",
+    "order": 4,
+    "width": 0,
+    "height": 0,
+    "name": "Duration",
+    "label": "Duration:",
+    "format": "{{msg.payload.rentalInfo.duration}}",
+    "layout": "row-left",
+    "className": "",
+    "x": 1180,
+    "y": 1440,
+    "wires": []
+  },
+  {
+    "id": "2ef30de7ed5aa6d6",
+    "type": "ui_text",
+    "z": "51979bdd7fc2c3b7",
+    "group": "bbba208ed9823912",
+    "order": 5,
+    "width": 0,
+    "height": 0,
+    "name": "Periods paid",
+    "label": "Periods paid:",
+    "format": "{{msg.payload.rentalInfo.periodsPaid}}",
+    "layout": "row-left",
+    "className": "",
+    "x": 1190,
+    "y": 1500,
+    "wires": []
+  },
+  {
+    "id": "d38d8517a8692288",
+    "type": "function",
+    "z": "51979bdd7fc2c3b7",
+    "name": "Rental details success",
+    "func": "const { code } = msg.payload;\n\nconsole.log(code)\n\nmsg.payload.rentalInfo = {\n    startTime: msg.payload.start_rental_date,\n    periodsPaid: msg.payload.periods_paid,\n}\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 260,
+    "y": 1380,
+    "wires": [["af47acca3a2ea303"]]
+  },
+  {
+    "id": "82afb8501524923c",
+    "type": "function",
+    "z": "51979bdd7fc2c3b7",
+    "name": "",
+    "func": "const now = new Date().getTime();\nconst start = new Date(msg.payload.start_rental_date).getTime();\nconst duration = parseInt((now - start) / 1000);\n\nconst minutes = Math.floor(duration / 60);\nconst seconds = duration - minutes * 60;\n\nmsg.payload.rentalInfo = {\n    startTime: msg.payload.start_rental_date,\n    periodsPaid: msg.payload.periods_paid,\n    duration: minutes.toString().padStart(2, '0') + \":\" + seconds.toString().padStart(2, '0'),\n    info: msg.payload.rental_info\n}\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 980,
+    "y": 1460,
+    "wires": [
+      [
+        "cf12cb73d8d6663a",
+        "85f1a1fb6b0bbacf",
+        "2ef30de7ed5aa6d6",
+        "9756c2a9f26fc917"
+      ]
+    ]
+  },
+  {
+    "id": "de512011a92f8bbb",
+    "type": "ui_ui_control",
+    "z": "51979bdd7fc2c3b7",
+    "name": "",
+    "events": "all",
+    "x": 1560,
+    "y": 1300,
+    "wires": [[]]
+  },
+  {
+    "id": "af47acca3a2ea303",
+    "type": "switch",
+    "z": "51979bdd7fc2c3b7",
+    "name": "",
+    "property": "payload.code",
+    "propertyType": "msg",
+    "rules": [
+      {
+        "t": "eq",
+        "v": "in_progress",
+        "vt": "str"
+      },
+      {
+        "t": "eq",
+        "v": "ending",
+        "vt": "str"
+      },
+      {
+        "t": "eq",
+        "v": "no_balance",
+        "vt": "str"
+      },
+      {
+        "t": "eq",
+        "v": "completed",
+        "vt": "str"
+      }
+    ],
+    "checkall": "true",
+    "repair": false,
+    "outputs": 4,
+    "x": 470,
+    "y": 1460,
+    "wires": [
+      ["10f04d4a57a2e04d"],
+      ["fa7542444493855e"],
+      ["5afd3b8ff8adea0f"],
+      ["7f44fd15760c931c"]
+    ]
+  },
+  {
+    "id": "9756c2a9f26fc917",
+    "type": "ui_text",
+    "z": "51979bdd7fc2c3b7",
+    "group": "bbba208ed9823912",
+    "order": 6,
+    "width": 0,
+    "height": 0,
+    "name": "Info",
+    "label": "",
+    "format": "{{msg.payload.rentalInfo.info}}",
+    "layout": "row-left",
+    "className": "",
+    "x": 1170,
+    "y": 1560,
+    "wires": []
+  },
+  {
+    "id": "fa7542444493855e",
+    "type": "function",
+    "z": "51979bdd7fc2c3b7",
+    "name": "",
+    "func": "msg.payload.rental_info = `A terminar dentro de ${parseInt(msg.payload.time_left).toString().padStart(2, '0')} segundos `\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 660,
+    "y": 1420,
+    "wires": [["82afb8501524923c"]]
+  },
+  {
+    "id": "10f04d4a57a2e04d",
+    "type": "function",
+    "z": "51979bdd7fc2c3b7",
+    "name": "",
+    "func": "msg.payload.rental_info = \"Em andamento\";\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 660,
+    "y": 1360,
+    "wires": [["82afb8501524923c"]]
+  },
+  {
+    "id": "5afd3b8ff8adea0f",
+    "type": "function",
+    "z": "51979bdd7fc2c3b7",
+    "name": "",
+    "func": "msg.payload.rental_info = \"Não possui saldo para continuar o aluguer. Vai terminar dentro de 1 minuto\";\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 660,
+    "y": 1480,
+    "wires": [["82afb8501524923c"]]
+  },
+  {
+    "id": "7f44fd15760c931c",
+    "type": "function",
+    "z": "51979bdd7fc2c3b7",
+    "name": "",
+    "func": "msg.payload.rental_info = \"Aluguer terminado\";\nconst rentalId = flow.set(\"rentalId\", null)\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 660,
+    "y": 1540,
+    "wires": [["82afb8501524923c"]]
+  },
+  {
+    "id": "0c66eddfeb46353f",
+    "type": "ui_button",
+    "z": "51979bdd7fc2c3b7",
+    "name": "",
+    "group": "bbba208ed9823912",
+    "order": 7,
+    "width": 0,
+    "height": 0,
+    "passthru": false,
+    "label": "Stop rental",
+    "tooltip": "",
+    "color": "",
+    "bgcolor": "",
+    "className": "",
+    "icon": "",
+    "payload": "",
+    "payloadType": "str",
+    "topic": "topic",
+    "topicType": "msg",
+    "x": 230,
+    "y": 1620,
+    "wires": [["709b17e35526f9a2"]]
+  },
+  {
+    "id": "2e0533c8c4e80588",
+    "type": "http request",
+    "z": "51979bdd7fc2c3b7",
+    "name": "Start rental request",
+    "method": "POST",
+    "ret": "obj",
+    "paytoqs": "ignore",
+    "url": "",
+    "tls": "",
+    "persist": false,
+    "proxy": "",
+    "authType": "",
+    "x": 750,
+    "y": 1620,
+    "wires": [["036a4c073489c7ae"]]
+  },
+  {
+    "id": "709b17e35526f9a2",
+    "type": "function",
+    "z": "51979bdd7fc2c3b7",
+    "name": "URL",
+    "func": "const token = flow.get(\"token\")\nconst rentalId = flow.get(\"rentalId\")\n\nif(rentalId) {\n    console.log(\"STOP\")\n    msg.url = `localhost:5003/${rentalId}/stop`;\n    msg.headers = {\n        \"Authorization\": `Bearer ${token}`\n    }\n    msg.payload = {\n        result: 1\n    }\n} else {\n    console.log(\"Teste 1\")\n    msg.payload = {\n        result: 2\n    }\n}\n\n\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 390,
+    "y": 1620,
+    "wires": [["a4e1bd29515f588c"]]
+  },
+  {
+    "id": "036a4c073489c7ae",
+    "type": "function",
+    "z": "51979bdd7fc2c3b7",
+    "name": "",
+    "func": "console.log(msg)\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 960,
+    "y": 1620,
+    "wires": [[]]
+  },
+  {
+    "id": "a4e1bd29515f588c",
+    "type": "switch",
+    "z": "51979bdd7fc2c3b7",
+    "name": "",
+    "property": "payload.result",
+    "propertyType": "msg",
+    "rules": [
+      {
+        "t": "eq",
+        "v": "1",
+        "vt": "num"
+      },
+      {
+        "t": "eq",
+        "v": "2",
+        "vt": "str"
+      }
+    ],
+    "checkall": "true",
+    "repair": false,
+    "outputs": 2,
+    "x": 530,
+    "y": 1620,
+    "wires": [["2e0533c8c4e80588"], ["386ef5ccba70d7bb"]]
+  },
+  {
+    "id": "ccc29297cc0441b3",
+    "type": "ui_spacer",
+    "z": "51979bdd7fc2c3b7",
+    "name": "spacer",
+    "group": "ea31a6383d9ae204",
+    "order": 1,
+    "width": 3,
+    "height": 1
+  },
+  {
+    "id": "46fcd7dcf09618be",
+    "type": "ui_spacer",
+    "z": "51979bdd7fc2c3b7",
+    "name": "spacer",
+    "group": "ea31a6383d9ae204",
+    "order": 3,
+    "width": 6,
+    "height": 1
+  },
+  {
+    "id": "48a67449545175da",
+    "type": "ui_spacer",
+    "z": "51979bdd7fc2c3b7",
+    "name": "spacer",
+    "group": "bbba208ed9823912",
+    "order": 2,
+    "width": 3,
+    "height": 1
+  },
+  {
+    "id": "1899c06189b50083",
+    "type": "ui_group",
+    "name": "Login",
+    "tab": "7efa1f22d6e3e8f8",
+    "order": 2,
+    "disp": true,
+    "width": "6",
+    "collapse": false,
+    "className": ""
+  },
+  {
+    "id": "ea31a6383d9ae204",
+    "type": "ui_group",
+    "name": "Rentals",
+    "tab": "7efa1f22d6e3e8f8",
+    "order": 3,
+    "disp": true,
+    "width": "6",
+    "collapse": false,
+    "className": ""
+  },
+  {
+    "id": "bbba208ed9823912",
+    "type": "ui_group",
+    "name": "RentalDetails",
+    "tab": "7efa1f22d6e3e8f8",
+    "order": 3,
+    "disp": true,
+    "width": "6",
+    "collapse": false,
+    "className": ""
+  },
+  {
+    "id": "7efa1f22d6e3e8f8",
+    "type": "ui_tab",
+    "name": "Micromobilidade",
+    "icon": "dashboard",
+    "order": 3,
+    "disabled": false,
+    "hidden": false
+  }
 ]
