@@ -1,0 +1,285 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API Presenças",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5001"
+    }
+  ],
+  "paths": {
+    "/rental/start": {
+      "post": {
+        "description": "Inicia o aluguer do veículo",
+        "requestBody": {
+          "content": {
+            "vehicle_id": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Aluguer iniciado",
+            "content": {
+              "message": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rental/{id}/stop": {
+      "post": {
+        "description": "Termina o aluguer do veículo",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "[a-zA-Z0-9]+"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "vehicle_id": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Aluguer iniciado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/objStopRentalResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rental/{id}/check": {
+      "get": {
+        "description": "Pesquisa o código do aluguer",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "[a-zA-Z0-9]+"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Devolve o estado do aluguer",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/objCheckRentalResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rental/active-rental": {
+      "get": {
+        "description": "Devolve os alugueres ativos",
+        "responses": {
+          "200": {
+            "description": "Aluguer ativo",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/objRentalResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rental/my-rentals": {
+      "get": {
+        "description": "Devolve alugueres terminados",
+        "responses": {
+          "200": {
+            "description": "Aluger terminado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/objMyRentalsResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "objStopRentalResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "objCheckRentalResponse": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "user_id": {
+            "type": "string"
+          },
+          "vehicle_id": {
+            "type": "string"
+          },
+          "start_rental_date": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-11-22T09:00:00.000Z"
+          },
+          "finish_rental_date": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-11-22T09:00:00.000Z"
+          },
+          "period": {
+            "type": "string"
+          },
+          "price_per_period": {
+            "type": "number"
+          },
+          "periods_paid": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string"
+          },
+          "amount_paid": {
+            "type": "number"
+          }
+        }
+      },
+      "objRentalResponse": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string"
+          },
+          "vehicle_id": {
+            "type": "string"
+          },
+          "start_rental_date": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-11-22T09:00:00.000Z"
+          },
+          "finish_rental_date": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-11-22T09:00:00.000Z"
+          },
+          "period": {
+            "type": "string"
+          },
+          "price_per_period": {
+            "type": "number"
+          },
+          "periods_paid": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string"
+          },
+          "amount_paid": {
+            "type": "number"
+          }
+        }
+      },
+      "objMyRentalsResponse": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string"
+          },
+          "vehicle_id": {
+            "type": "string"
+          },
+          "start_rental_date": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-11-22T09:00:00.000Z"
+          },
+          "finish_rental_date": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2021-11-22T09:00:00.000Z"
+          },
+          "period": {
+            "type": "string"
+          },
+          "price_per_period": {
+            "type": "number"
+          },
+          "periods_paid": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string"
+          },
+          "amount_paid": {
+            "type": "number"
+          },
+          "duration": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "responses": {
+      "400BadRequest": {
+        "description": "Bad request."
+      }
+    }
+  }
+}
