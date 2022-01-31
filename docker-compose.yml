@@ -1,4 +1,4 @@
-version: "1"
+version: "3.3"
 services:
   database:
     image: mongo:latest
@@ -30,6 +30,7 @@ services:
       - SERVICE_VEHICLES_PORT=${SERVICE_VEHICLES_PORT}
       - SERVICE_RENTAL_HOST=${SERVICE_RENTAL_HOST}
       - SERVICE_RENTAL_PORT=${SERVICE_RENTAL_PORT}
+      - HEADER_API_KEY=${HEADER_API_KEY}
     networks:
       - node-network
     restart: "${DOCKER_RESTART}"
@@ -58,8 +59,9 @@ services:
       - JWT_ACCESS_EXPIRATION_SECONDS=${JWT_ACCESS_EXPIRATION_SECONDS}
       - SERVICE_GENDER_AGE_HOST=${SERVICE_GENDER_AGE_HOST}
       - SERVICE_GENDER_AGE_PORT=9000
+      - HEADER_API_KEY=${HEADER_API_KEY}
     depends_on:
-      - mongodb
+      - database
     volumes:
       - "./service_users:/app"
     networks:
@@ -76,8 +78,9 @@ services:
     environment:
       - PORT=${SERVICE_VEHICLES_PORT}
       - MONGODB_URL=${MONGODB_URL}
+      - HEADER_API_KEY=${HEADER_API_KEY}
     depends_on:
-      - mongodb
+      - database
     networks:
       - node-network
     restart: "${DOCKER_RESTART}"
@@ -92,8 +95,9 @@ services:
     environment:
       - PORT=${SERVICE_RENTAL_PORT}
       - MONGODB_URL=${MONGODB_URL}
+      - HEADER_API_KEY=${HEADER_API_KEY}
     depends_on:
-      - mongodb
+      - database
     networks:
       - node-network
     restart: "${DOCKER_RESTART}"
